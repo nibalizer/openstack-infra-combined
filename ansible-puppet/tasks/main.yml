@@ -1,0 +1,84 @@
+---
+- block:
+  - name: ensure hiera directory
+    file:
+      state: directory
+      path: "{{ hieradata }}/{{ puppet_environment }}/{{ item }}"
+      owner: root
+      group: root
+      mode: 0700
+    with_items:
+    - fqdn
+    - group
+
+  - name: make file list
+    puppet_get_hiera_file_list:
+      fqdn: "{{ ansible_fqdn }}"
+      groups: "{{ hostvars[inventory_hostname].group_names }}"
+      location: "{{ hieradata }}/{{ puppet_environment }}"
+    delegate_to: localhost
+    register: hiera_file_paths
+
+  - name: copy hiera files
+    copy:
+      src: "{{ item }}"
+      dest: "{{ item }}"
+      mode: 0600
+    with_items: hiera_file_paths.paths|default()
+
+  when: copy_hieradata
+
+- block:
+  - name: copy puppet modules
+    synchronize:
+      src: "{{ manifest_base }}/{{ puppet_environment }}"
+      dest: "{{ manifest_base }}"
+
+  - name: ensure hieradata manifest link is present
+    file:
+      src: "{{ hieradata }}"
+      dest: "{{ manifest_base }}/hieradata"
+      state: link
+    when: copy_hieradata
+
+  - name: copy system puppet modules
+    synchronize:
+      src: /etc/puppet/modules
+      dest: /etc/puppet
+
+  when:
+  - copy_puppet
+  - manifest_base is defined
+
+- name: run puppet
+  puppet:
+    puppetmaster: "{{ puppetmaster|default(omit) }}"
+    manifest: "{{ manifest|default(omit) }}"
+    show_diff: "{{ show_diff|default(false) }}"
+    facts: "{{ facts|default(omit) }}"
+    facter_basename: "{{ facter_basename|default(omit) }}"
+
+- block:
+  - name: find logs
+    shell: "ls -tr /var/lib/puppet/reports/{{ ansible_fqdn }}/*_puppetdb.json"
+    register: files
+
+  - name: set log filename
+    set_fact: puppet_logfile="{{ files.stdout_lines|sort|last }}"
+
+  - name: fetch file
+    synchronize:
+      mode: pull
+      src: "{{ puppet_logfile }}"
+      dest: /var/lib/puppet/reports/{{ ansible_fqdn }}
+
+  - name: post facts
+    puppet_post_puppetdb:
+      puppetdb: "{{ puppetdb }}"
+      hostvars: "{{ hostvars[inventory_hostname] }}"
+      logfile: "{{ puppet_logfile }}"
+      whoami: "{{ ansible_fqdn }}"
+    delegate_to: localhost
+    connection: local
+
+  when: puppetdb is defined
