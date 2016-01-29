@@ -1,0 +1,19 @@
+- job-template:
+    name: '{pipeline}-gitdm'
+
+    node: '{node}'
+
+    builders:
+      - revoke-sudo
+      - link-logs
+      - net-info
+      - gerrit-git-prep
+      - shell: |
+          #!/bin/bash -xe
+          export TEMPDIR=${{TEMPDIR:-$(mktemp -d $(pwd)/dmtmp-XXXXXX)}}
+          export GITBASE=${{TEMPDIR}}/git
+          export LP_STATS=n
+          bash ./do-it.sh
+
+    publishers:
+      - console-log

@@ -1,0 +1,228 @@
+- job:
+    name: gate-murano-devstack-dsvm
+    node: devstack-trusty
+
+    wrappers:
+      - build-timeout:
+          timeout: 65
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=60
+          export DEVSTACK_GATE_NEUTRON=1
+          export ENABLED_SERVICES=tempest
+          export PROJECTS="openstack/murano $PROJECTS"
+          export PROJECTS="openstack/murano-dashboard $PROJECTS"
+          export PROJECTS="openstack/python-muranoclient $PROJECTS"
+          export KEEP_LOCALRC=1
+
+          if [[ $ZUUL_BRANCH =~ "kilo" ]]; then
+              # Kilo version uses 'hooks' approach that requires explicit
+              # enabling of services.
+              # todo(freerunner): Remove this ugly workaround when kilo support will be
+              # todo(freerunner): dropped off.
+              ENABLED_SERVICES+=,murano,murano-api,murano-engine
+          else
+              # Enable murano devstack plugin. Provided repo should be cloned by zuul before devstack run
+              # and below provided link should not be used.
+              export DEVSTACK_LOCAL_CONFIG="enable_plugin murano git://git.openstack.org/openstack/murano"
+          fi
+
+          function pre_test_hook {
+              cd /opt/stack/new/murano/functionaltests
+              ./pre_test_hook.sh
+          }
+          export -f pre_test_hook
+
+          function post_test_hook {
+              cd /opt/stack/new/murano/functionaltests
+              ./post_test_hook.sh
+          }
+          export -f post_test_hook
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - devstack-logs
+      - console-log
+
+# Murano and Congress integration functional tests
+- job:
+    name: gate-murano-congress-devstack-dsvm
+    node: devstack-trusty
+
+    wrappers:
+      - build-timeout:
+          timeout: 65
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=60
+          export DEVSTACK_GATE_NEUTRON=1
+          export ENABLED_SERVICES=tempest
+          export PROJECTS="openstack/murano $PROJECTS"
+          export PROJECTS="openstack/murano-dashboard $PROJECTS"
+          export PROJECTS="openstack/python-muranoclient $PROJECTS"
+          export PROJECTS="openstack/congress $PROJECTS"
+          export PROJECTS="openstack/python-congressclient $PROJECTS"
+          export PROJECTS="openstack/mistral $PROJECTS"
+          export PROJECTS="openstack/mistral-dashboard $PROJECTS"
+          export PROJECTS="openstack/python-mistralclient $PROJECTS"
+          export KEEP_LOCALRC=1
+
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin mistral git://git.openstack.org/openstack/mistral"
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin congress git://git.openstack.org/openstack/congress"
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"MURANO_ENABLE_MODEL_POLICY_ENFORCEMENT=True"
+
+          if [[ $ZUUL_BRANCH =~ "kilo" ]]; then
+              # Kilo version uses 'hooks' approach that requires explicit
+              # enabling of services.
+              # todo(freerunner): Remove this ugly workaround when kilo support will be
+              # todo(freerunner): dropped off.
+              ENABLED_SERVICES+=,murano,murano-api,murano-engine
+          else
+              # Enable murano devstack plugin. Provided repo should be cloned by zuul before devstack run
+              # and below provided link should not be used.
+              export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin murano git://git.openstack.org/openstack/murano"
+          fi
+
+          function pre_test_hook {
+              cd /opt/stack/new/murano/functionaltests
+              ./pre_test_hook_congress.sh
+              ./pre_test_hook_mistral.sh
+              ./pre_test_hook.sh
+          }
+          export -f pre_test_hook
+
+          function post_test_hook {
+              cd /opt/stack/new/murano/functionaltests
+              ./post_test_hook.sh congress_mistral
+          }
+          export -f post_test_hook
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - devstack-logs
+      - console-log
+
+- job-template:
+    name: '{pipeline}-muranoclient-dsvm-functional{job-suffix}'
+    node: '{node}'
+
+    wrappers:
+      - build-timeout:
+          timeout: 65
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=60
+          export DEVSTACK_GATE_NEUTRON=1
+          export DEVSTACK_PROJECT_FROM_GIT=python-muranoclient
+          export BRANCH_OVERRIDE={branch-override}
+
+          export ENABLED_SERVICES=tempest
+          export PROJECTS="openstack/murano $PROJECTS"
+          export PROJECTS="openstack/murano-dashboard $PROJECTS"
+          export PROJECTS="openstack/python-muranoclient $PROJECTS"
+          export KEEP_LOCALRC=1
+
+          if [[ $ZUUL_BRANCH =~ "kilo" ]]; then
+              # Kilo version uses 'hooks' approach that requires explicit
+              # enabling of services.
+              # todo(freerunner): Remove this ugly workaround when kilo support will be
+              # todo(freerunner): dropped off.
+              ENABLED_SERVICES+=,murano,murano-api,murano-engine
+          else
+              # Enable murano devstack plugin. Provided repo should be cloned by zuul before devstack run
+              # and below provided link should not be used.
+              export DEVSTACK_LOCAL_CONFIG="enable_plugin murano git://git.openstack.org/openstack/murano"
+          fi
+
+          if [ "$BRANCH_OVERRIDE" != "default" ] ; then
+              export OVERRIDE_ZUUL_BRANCH=$BRANCH_OVERRIDE
+          fi
+
+          function pre_test_hook {{
+              # Install Murano devstack modules
+              cd /opt/stack/new/murano/functionaltests
+              ./pre_test_hook.sh
+          }}
+          export -f pre_test_hook
+
+          function post_test_hook {{
+              # Configure and run functional tests
+              /opt/stack/new/python-muranoclient/muranoclient/tests/functional/hooks/post_test_hook.sh
+          }}
+          export -f post_test_hook
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - test-results
+      - devstack-logs
+
+- job-template:
+    name: 'gate-tempest-dsvm-murano-{mode}{job-suffix}'
+    node: '{node}'
+
+    wrappers:
+      - build-timeout:
+          timeout: 125
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=120
+          export DEVSTACK_GATE_TEMPEST=1
+          export DEVSTACK_GATE_NEUTRON=1
+          # Allow tempest to use site-packages with plugins
+          export DEVSTACK_GATE_TEMPEST_ALL_PLUGINS=1
+          export PROJECTS="openstack/murano $PROJECTS"
+          export PROJECTS="openstack/murano-dashboard $PROJECTS"
+          export PROJECTS="openstack/python-muranoclient $PROJECTS"
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin murano git://git.openstack.org/openstack/murano"
+          export BRANCH_OVERRIDE={branch-override}
+          if [ "$BRANCH_OVERRIDE" != "default" ] ; then
+              export OVERRIDE_ZUUL_BRANCH=$BRANCH_OVERRIDE
+          fi
+          if [ "{mode}" = "cfapi" ]; then
+              export ENABLED_SERVICES+=,murano-cfapi
+              export DEVSTACK_GATE_TEMPEST_REGEX="service_broker"
+          fi
+          if [ "{mode}" = "api" ]; then
+              export DEVSTACK_GATE_TEMPEST_REGEX="application_catalog"
+          fi
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - test-results
+      - devstack-logs
+      - console-log

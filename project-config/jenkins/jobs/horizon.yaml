@@ -1,0 +1,81 @@
+- job:
+    name: gate-horizon-jshint
+    node: bare-trusty
+
+    builders:
+      - revoke-sudo
+      - gerrit-git-prep
+      - tox:
+          envlist: jshint
+
+    publishers:
+      - console-log
+
+- job:
+    name: gate-horizon-dsvm-integration
+    node: devstack-trusty
+
+    wrappers:
+      - build-timeout:
+          timeout: 95
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - firefox-install
+      - xvfb-install
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=90
+          export DEVSTACK_GATE_TEMPEST=0
+          export DEVSTACK_GATE_EXERCISES=0
+          export DEVSTACK_GATE_INSTALL_TESTONLY=1
+          export DEVSTACK_GATE_NEUTRON=1
+
+          function pre_test_hook {
+              cd /opt/stack/new/horizon/tools/gate/integration
+              ./pre_test_hook.sh
+          }
+          export -f pre_test_hook
+
+          function post_test_hook {
+              cd /opt/stack/new/horizon/tools/gate/integration
+              ./post_test_hook.sh
+          }
+          export -f post_test_hook
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - test-results
+      - devstack-logs
+      - console-log
+      - publish-screenshots
+
+- publisher:
+    name: publish-screenshots
+    publishers:
+      - scp:
+          site: 'static.openstack.org'
+          files:
+            - target: 'logs/$LOG_PATH/screenshots'
+              source: 'integration_tests_screenshots/**'
+              copy-after-failure: true
+
+- job:
+    name: gate-horizon-selenium-headless
+    node: bare-trusty
+
+    builders:
+      - revoke-sudo
+      - gerrit-git-prep
+      - shell: |
+          #!/bin/bash -xe
+          NOSE_WITH_XUNIT=1 tox -evenv -- /bin/bash run_tests.sh -N --only-selenium --selenium-headless
+
+    publishers:
+      - console-log

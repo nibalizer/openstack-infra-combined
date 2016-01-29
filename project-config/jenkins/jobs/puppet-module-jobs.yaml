@@ -1,0 +1,338 @@
+- job-template:
+    name: 'gate-{name}-puppet-unit-{puppet_version}-dsvm-{ostype}'
+    node: 'devstack-{ostype}'
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - puppet-prepare-node
+      - gerrit-git-prep
+      - revoke-sudo
+      - shell: |
+          if [ "{puppet_version}" != "latest" ]; then
+            export PUPPET_GEM_VERSION='~> {puppet_version}.0'
+          fi
+          mkdir .bundled_gems
+          export GEM_HOME=`pwd`/.bundled_gems
+          gem install bundler --no-rdoc --no-ri --verbose
+          $GEM_HOME/bin/bundle install --retry 3
+          $GEM_HOME/bin/bundle exec rake spec SPEC_OPTS='--format documentation'
+
+    wrappers:
+      - build-timeout:
+          timeout: 60
+      - timestamps
+
+    publishers:
+      - console-log
+
+
+- job-template:
+    name: 'gate-{name}-puppet-unit-dsvm-{ostype}'
+    node: 'devstack-{ostype}'
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - puppet-prepare-node
+      - gerrit-git-prep
+      - revoke-sudo
+      - shell: |
+          #!/bin/bash -xe
+          RESULT=0
+          for PUPPET_VERSION in {puppet_unit_version}; do
+              if [ "$PUPPET_VERSION" != "latest" ]; then
+                export PUPPET_GEM_VERSION="~> $PUPPET_VERSION.0"
+              fi
+              rm -f Gemfile.lock
+              mkdir .bundled_gems_$PUPPET_VERSION
+              export GEM_HOME=`pwd`/.bundled_gems_$PUPPET_VERSION
+              gem install bundler --no-rdoc --no-ri --verbose
+              $GEM_HOME/bin/bundle install --retry 3
+              set +e
+              $GEM_HOME/bin/bundle exec rake spec SPEC_OPTS='--format documentation'
+              OUT=$?
+              set -e
+              if [ "$OUT" -gt "0" ]; then
+                RESULT=1
+              fi
+          done
+          exit $RESULT
+
+    wrappers:
+      - build-timeout:
+          timeout: 60
+      - timestamps
+
+    publishers:
+      - console-log
+
+
+- job-template:
+    name: 'gate-{name}-puppet-beaker-rspec-dsvm-{ostype}{job-suffix}'
+    node: 'devstack-{ostype}'
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - link-logs
+      - puppet-prepare-node
+      - gerrit-git-prep
+      - allow-local-ssh-root
+      - shell: |
+          mkdir .bundled_gems
+          export GEM_HOME=`pwd`/.bundled_gems
+          gem install bundler --no-rdoc --no-ri --verbose
+          $GEM_HOME/bin/bundle install --retry 3
+          export BEAKER_set=nodepool-{ostype}
+          export BEAKER_debug=yes
+          export BEAKER_color=no
+          $GEM_HOME/bin/bundle exec rspec spec/acceptance
+
+    wrappers:
+      - build-timeout:
+          timeout: 60
+      - timestamps
+
+    publishers:
+      - copy-puppet-logs
+      - devstack-logs
+      - console-log
+
+- job-template:
+    name: '{name}-forge-upload'
+    node: release
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - revoke-sudo
+      - gerrit-git-prep
+      - shell: |
+          #!/bin/bash
+          cat > Rakefile << EOF
+          require 'puppet_blacksmith/rake_tasks'
+          EOF
+          TAG=${{ZUUL_REF:10}}
+          sed -i -e 's/  "version":.*/  "version": "'$TAG'",/' metadata.json
+          mkdir .bundled_gems
+          export GEM_HOME=`pwd`/.bundled_gems
+          gem install --no-ri --no-rdoc  puppetlabs_spec_helper puppet-blacksmith
+          rake module:push
+
+    publishers:
+      - console-log
+
+
+- job-template:
+    name: 'gate-{name}-puppet-lint'
+    node: '{node}'
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - revoke-sudo
+      - gerrit-git-prep
+      - puppet-lint
+
+    publishers:
+      - console-log
+
+- job-template:
+    name: 'gate-{name}-puppet-syntax'
+    node: '{node}'
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - revoke-sudo
+      - gerrit-git-prep
+      - puppet-syntax
+
+    publishers:
+      - console-log
+
+- job-template:
+    name: 'gate-{name}-puppet-syntax-{puppet_version}-dsvm-{ostype}'
+    node: 'devstack-{ostype}'
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - puppet-prepare-node
+      - gerrit-git-prep
+      - revoke-sudo
+      - shell: |
+          export PUPPET_GEM_VERSION='~> {puppet_version}'
+          mkdir .bundled_gems
+          export GEM_HOME=`pwd`/.bundled_gems
+          gem install bundler --no-rdoc --no-ri --verbose
+          $GEM_HOME/bin/bundle install --retry 3
+          # FUTURE_PARSER=yes is only supported by Puppet 3.x
+          if [ "{puppet_version}" -lt "4" ]; then
+              export FUTURE_PARSER=yes
+          fi
+          $GEM_HOME/bin/bundle exec rake syntax
+
+    publishers:
+      - console-log
+
+- job-template:
+    name: 'gate-puppet-openstack-integration-dsvm-multinode{job-suffix}'
+    node: '{node}'
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - link-logs
+      - zuul-clone:
+          project: openstack/puppet-openstack-integration
+      - shell: |
+          #!/bin/bash -xe
+          cd openstack/puppet-openstack-integration
+          ./run_multinode.sh
+
+    wrappers:
+      - build-timeout:
+          timeout: 60
+      - timestamps
+
+    publishers:
+      - console-log
+
+- job-template:
+    name: 'gate-puppet-openstack-integration-{scenario}-tempest-dsvm-{ostype}'
+    node: 'devstack-{ostype}'
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - link-logs
+      - puppet-prepare-node
+      - zuul-clone:
+          project: openstack/puppet-openstack-integration
+      - shell: |
+          #!/bin/bash -xe
+          export SCENARIO={scenario}
+          cd openstack/puppet-openstack-integration
+          mkdir .bundled_gems
+          export GEM_HOME=`pwd`/.bundled_gems
+          gem install bundler --no-rdoc --no-ri --verbose
+          ./run_tests.sh
+
+    wrappers:
+      - build-timeout:
+          timeout: 60
+      - timestamps
+
+    publishers:
+      - copy-puppet-logs
+      - devstack-logs
+      - console-log
+
+- job-template:
+    name: 'gate-puppet-openstack-spec-helper-unit-dsvm-{ostype}'
+    node: 'devstack-{ostype}'
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - link-logs
+      - puppet-prepare-node
+      - zuul-clone:
+          project: openstack/puppet-openstack_spec_helper
+      - shell: |
+          #!/bin/bash -xe
+          cd openstack/puppet-openstack_spec_helper
+          ./run_unit_tests.sh
+
+    wrappers:
+      - build-timeout:
+          timeout: 60
+      - timestamps
+
+    publishers:
+      - console-log
+
+- job-template:
+    name: 'gate-puppet-openstack-spec-helper-beaker-rspec-dsvm-{ostype}'
+    node: 'devstack-{ostype}'
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - link-logs
+      - puppet-prepare-node
+      - zuul-clone:
+          project: openstack/puppet-openstack_spec_helper
+      - allow-local-ssh-root
+      - shell: |
+          #!/bin/bash -xe
+          cd openstack/puppet-openstack_spec_helper
+          ./run_beaker_tests.sh
+
+    wrappers:
+      - build-timeout:
+          timeout: 60
+      - timestamps
+
+    publishers:
+      - copy-puppet-logs
+      - devstack-logs
+      - console-log
+
+- job-group:
+    name: 'puppet-check-jobs'
+    puppet_version:
+      - 3
+      - 4
+    ostype:
+      - centos7
+    jobs:
+      - 'gate-{name}-puppet-lint'
+      - 'gate-{name}-puppet-syntax'
+      - 'gate-{name}-puppet-syntax-{puppet_version}-dsvm-{ostype}'
+
+- job-group:
+    name: 'puppet-module-unit'
+    puppet_version:
+      - 3.3
+      - 3.4
+      - 3.6
+      - 3.7
+      - 3.8
+      - 4.0
+      - 'latest'
+    puppet_unit_version: '3.3 3.4 3.6 3.7 3.8 4.0 latest'
+    ostype:
+      - centos7
+    jobs:
+      - 'gate-{name}-puppet-unit-{puppet_version}-dsvm-{ostype}'
+      - 'gate-{name}-puppet-unit-dsvm-{ostype}'
+
+- job-group:
+    name: 'puppet-beaker-jobs'
+    ostype:
+      - trusty
+      - centos7
+    jobs:
+      - 'gate-{name}-puppet-beaker-rspec-dsvm-{ostype}{job-suffix}'
+
+- job-group:
+    name: 'puppet-openstack-integration-jobs'
+    ostype:
+      - trusty
+      - centos7
+    scenario:
+      - scenario001
+      - scenario002
+    jobs:
+      - 'gate-puppet-openstack-integration-{scenario}-tempest-dsvm-{ostype}'
+
+- job-group:
+    name: 'puppet-openstack-spec-helper-jobs'
+    ostype:
+      - centos7
+    jobs:
+      - 'gate-puppet-openstack-spec-helper-unit-dsvm-{ostype}'
+      - 'gate-puppet-openstack-spec-helper-beaker-rspec-dsvm-{ostype}'

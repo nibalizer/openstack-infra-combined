@@ -1,0 +1,147 @@
+- job-template:
+    name: '{pipeline}-functional-{network}-dsvm-ec2api{job-suffix}'
+    node: '{node}'
+
+    wrappers:
+      - build-timeout:
+          timeout: 125
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=120
+          export DEVSTACK_GATE_TEMPEST=1
+          export TEMPEST_CONCURRENCY=2
+          export BRANCH_OVERRIDE={branch-override}
+          if [ "$BRANCH_OVERRIDE" != "default" ] ; then
+              export OVERRIDE_ZUUL_BRANCH=$BRANCH_OVERRIDE
+          fi
+          export PROJECTS="openstack/ec2-api $PROJECTS"
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin ec2-api git://git.openstack.org/openstack/ec2-api"
+
+          if [ "{network}" = "neutron" ] ; then
+              export DEVSTACK_GATE_NEUTRON=1
+              export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin neutron-vpnaas git://git.openstack.org/openstack/neutron-vpnaas"
+          else
+              export DEVSTACK_GATE_NEUTRON=0
+          fi
+
+          if [ "$ZUUL_BRANCH" = "stable/kilo" ] ; then
+              export DEVSTACK_GATE_TEMPEST_NOTESTS=1
+              function post_test_hook {{
+                  source $BASE/new/devstack/accrc/admin/admin
+                  cd /opt/stack/new/ec2-api/
+                  ./ec2api/tests/contrib/post_test_hook.sh
+              }}
+              export -f post_test_hook
+          else
+              export DEVSTACK_GATE_TEMPEST_ALL_PLUGINS=1
+              export DEVSTACK_GATE_TEMPEST_REGEX="ec2api.tests.functional"
+          fi
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - devstack-logs
+      - console-log
+
+- job:
+    name: 'ec2-api-functional-neutron-dsvm-full'
+    node: devstack-trusty
+
+    wrappers:
+      - build-timeout:
+          timeout: 185
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=180
+          export DEVSTACK_GATE_NEUTRON=1
+
+          export PROJECTS="openstack/ec2-api $PROJECTS"
+          export PROJECTS="openstack/swift3 $PROJECTS"
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin ec2-api git://git.openstack.org/openstack/ec2-api"
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin neutron-vpnaas git://git.openstack.org/openstack/neutron-vpnaas"
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"RUN_LONG_TESTS=1"
+          export ENABLED_SERVICES+=,swift3
+
+          function post_test_hook {
+              source $BASE/new/devstack/accrc/admin/admin
+              cd /opt/stack/new/ec2-api/
+              ./ec2api/tests/contrib/post_test_hook.sh
+          }
+          export -f post_test_hook
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - devstack-logs
+      - console-log
+
+- job:
+    name: 'ec2-api-rally-dsvm-fakevirt'
+    node: devstack-trusty
+
+    wrappers:
+      - build-timeout:
+          timeout: 125
+      - timestamps
+
+    builders:
+      - link-logs
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PROJECTS="openstack/ec2-api $PROJECTS"
+          export PROJECTS="openstack/rally $PROJECTS"
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin ec2-api git://git.openstack.org/openstack/ec2-api"
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin rally git://git.openstack.org/openstack/rally"
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin neutron-vpnaas git://git.openstack.org/openstack/neutron-vpnaas"
+          export DEVSTACK_GATE_VIRT_DRIVER=fake
+          export DEVSTACK_GATE_NEUTRON=1
+          export DEVSTACK_GATE_TEMPEST_NOTESTS=1
+          export DEVSTACK_GATE_TIMEOUT=120
+
+          # Switch on tempest because m1.nano is created only for tempest...
+          export DEVSTACK_GATE_TEMPEST=1
+
+          export RALLY_SCENARIO=ec2-api-fakevirt
+          export CEILOMETER_NOTIFICATION_TOPICS=notifications,profiler
+          export ENABLED_SERVICES+=,rally
+
+          function pre_test_hook {
+              # Install rally-devstack integration
+              cp -r $BASE/new/rally/contrib/devstack/* $BASE/new/devstack/
+          }
+          export -f pre_test_hook
+
+          function post_test_hook {
+              # run needed preparation steps for third-party project
+              if [ -f $BASE/new/ec2-api/rally-scenarios/post_test_hook.sh ] ; then
+                  $BASE/new/ec2-api/rally-scenarios/post_test_hook.sh
+              fi
+              $BASE/new/rally/tests/ci/rally-gate.sh
+          }
+          export -f post_test_hook
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - devstack-logs
+      - console-log
+      - rally-plot
+

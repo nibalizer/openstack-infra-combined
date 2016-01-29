@@ -1,0 +1,261 @@
+- job-template:
+    name: 'gate-tempest-dsvm-ceilometer-{backend}{job-suffix}'
+    node: '{node}'
+
+    wrappers:
+      - build-timeout:
+          timeout: 125
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=120
+          export DEVSTACK_GATE_TEMPEST=1
+          export DEVSTACK_GATE_CEILOMETER_BACKEND={backend}
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin ceilometer git://git.openstack.org/openstack/ceilometer"
+          export BRANCH_OVERRIDE={branch-override}
+          if [ "$BRANCH_OVERRIDE" != "default" ] ; then
+              export OVERRIDE_ZUUL_BRANCH=$BRANCH_OVERRIDE
+          fi
+          if [ "{backend}" = "postgresql" ] ; then
+              export DEVSTACK_GATE_POSTGRES=1
+          fi
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - devstack-logs
+      - console-log
+
+
+- job-template:
+    name: 'gate-tempest-dsvm-ceilometer-{backend}-full{job-suffix}'
+    node: '{node}'
+
+    wrappers:
+      - build-timeout:
+          timeout: 125
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=120
+          export DEVSTACK_GATE_TEMPEST=1
+          export DEVSTACK_GATE_TEMPEST_FULL=1
+          export DEVSTACK_GATE_CEILOMETER_BACKEND={backend}
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin ceilometer git://git.openstack.org/openstack/ceilometer"
+          export BRANCH_OVERRIDE={branch-override}
+          if [ "$BRANCH_OVERRIDE" != "default" ] ; then
+              export OVERRIDE_ZUUL_BRANCH=$BRANCH_OVERRIDE
+          fi
+          if [ "{backend}" = "postgresql" ] ; then
+              export DEVSTACK_GATE_POSTGRES=1
+          fi
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - devstack-logs
+      - console-log
+
+- job-template:
+    name: 'gate-tempest-dsvm-ceilometer-{backend}-neutron-full{job-suffix}'
+    node: '{node}'
+
+    wrappers:
+      - build-timeout:
+          timeout: 125
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=120
+          export DEVSTACK_GATE_TEMPEST=1
+          export DEVSTACK_GATE_TEMPEST_FULL=1
+          export DEVSTACK_GATE_NEUTRON=1
+          export DEVSTACK_GATE_CEILOMETER_BACKEND={backend}
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin ceilometer git://git.openstack.org/openstack/ceilometer"
+          export BRANCH_OVERRIDE={branch-override}
+          if [ "$BRANCH_OVERRIDE" != "default" ] ; then
+              export OVERRIDE_ZUUL_BRANCH=$BRANCH_OVERRIDE
+          fi
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - devstack-logs
+      - console-log
+
+- job-template:
+    name: '{pipeline}-ceilometer-dsvm-functional-{backend}{job-suffix}'
+    node: '{node}'
+
+    wrappers:
+      - build-timeout:
+          timeout: 125
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=120
+          export DEVSTACK_GATE_CEILOMETER_BACKEND={backend}
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin ceilometer git://git.openstack.org/openstack/ceilometer"
+          export BRANCH_OVERRIDE={branch-override}
+          if [ "$BRANCH_OVERRIDE" != "default" ] ; then
+              export OVERRIDE_ZUUL_BRANCH=$BRANCH_OVERRIDE
+          fi
+
+          if [ "{backend}" = "postgresql" ] ; then
+              export DEVSTACK_GATE_POSTGRES=1
+          fi
+
+          function post_test_hook {{
+              # Configure and run functional tests
+              $BASE/new/ceilometer/ceilometer/tests/functional/hooks/post_test_hook.sh "{backend}"
+          }}
+          export -f post_test_hook
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - test-results
+      - devstack-logs
+      - console-log
+
+- job-template:
+    name: '{pipeline}-ceilometerclient-dsvm-functional{job-suffix}'
+    node: '{node}'
+
+    wrappers:
+      - build-timeout:
+          timeout: 65
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=60
+          export BRANCH_OVERRIDE={branch-override}
+          export PROJECTS="openstack/python-ceilometerclient $PROJECTS"
+          export DEVSTACK_PROJECT_FROM_GIT=python-ceilometerclient
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin ceilometer git://git.openstack.org/openstack/ceilometer"
+          # NOTE(sileht): in liberty and kilo telemetry-alarming was in ceilometer code tree
+          if [[ "$ZUUL_BRANCH" != "stable/kilo" && "$ZUUL_BRANCH" != "stable/liberty" ]] ; then
+              export PROJECTS="openstack/aodh $PROJECTS"
+              export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin aodh git://git.openstack.org/openstack/aodh"
+          fi
+          if [ "$BRANCH_OVERRIDE" != "default" ] ; then
+              export OVERRIDE_ZUUL_BRANCH=$BRANCH_OVERRIDE
+          fi
+
+          function post_test_hook {{
+              # Configure and run functional tests
+              $BASE/new/python-ceilometerclient/ceilometerclient/tests/functional/hooks/post_test_hook.sh
+          }}
+          export -f post_test_hook
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - test-results
+      - devstack-logs
+      - console-log
+
+- job-template:
+    name: 'gate-telemetry-dsvm-integration-{name}'
+    node: devstack-trusty
+
+    wrappers:
+      - build-timeout:
+          timeout: 125
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+
+          # NOTE(sileht): This job runs on Aodh, Ceilometer and Gnocchi
+          # Gnocchi uses an independant release cycle. So we map here
+          # which Gnocchi version can be used with other OpenStack
+          # componements and the reverse.
+          gnocchi_branch=
+          if [ "$ZUUL_PROJECT" == "openstack/gnocchi" ]; then
+              case "$ZUUL_BRANCH" in
+                  "stable/1.0"|"stable/1.1"|"stable/1.2") export OVERRIDE_ZUUL_BRANCH=stable/kilo ;;
+                  "stable/1.3") export OVERRIDE_ZUUL_BRANCH=stable/liberty ;;
+              esac
+          else
+              case "$ZUUL_BRANCH" in
+                  "stable/kilo") export OVERRIDE_GNOCCHI_PROJECT_BRANCH="stable/1.2";;
+                  "stable/liberty") export OVERRIDE_GNOCCHI_PROJECT_BRANCH="stable/1.3";;
+              esac
+          fi
+
+          export DEVSTACK_GATE_TIMEOUT=120
+          export DEVSTACK_GATE_HEAT=1
+          export DEVSTACK_GATE_NEUTRON=1
+          export DEVSTACK_GATE_TEMPEST=0
+          export DEVSTACK_GATE_EXERCISES=0
+          export DEVSTACK_GATE_INSTALL_TESTONLY=1
+
+          # Add just the needed telemetry services for this job (ceilometer-alarm* must be disabled)
+          s="ceilometer-acompute,ceilometer-acentral,ceilometer-collector,ceilometer-api,ceilometer-anotification,"
+          s+="aodh-api,aodh-alarm-notifier,aodh-alarm-evaluator,"
+          s+="gnocchi-api"
+          export ENABLE_SERVICES="$s"
+
+          export PROJECTS="openstack/ceilometer openstack/aodh openstack/gnocchi"
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin gnocchi git://git.openstack.org/openstack/gnocchi"
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin ceilometer git://git.openstack.org/openstack/ceilometer"
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin aodh git://git.openstack.org/openstack/aodh"
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"GNOCCHI_ARCHIVE_POLICY=high"
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"CEILOMETER_PIPELINE_INTERVAL=5"
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"CEILOMETER_BACKEND=gnocchi"
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"GNOCCHI_COORDINATOR_URL=redis://localhost:6379?timeout=5"
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"GNOCCHI_STORAGE_BACKEND=file"
+
+          export PROJECTS="openstack/{name} $PROJECTS"
+          export DEVSTACK_PROJECT_FROM_GIT={name}
+
+          function post_test_hook {{
+              cd /opt/stack/new/ceilometer/ceilometer/tests/integration/hooks/
+              ./post_test_hook.sh
+          }}
+          export -f post_test_hook
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - devstack-logs
+      - console-log

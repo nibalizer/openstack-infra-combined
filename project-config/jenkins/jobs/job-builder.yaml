@@ -1,0 +1,12 @@
+- job:
+    name: jenkins-job-builder-compare-xml
+    node: bare-trusty
+
+    builders:
+      - revoke-sudo
+      - gerrit-git-prep
+      - shell: |
+          ./tools/run-compare-xml.sh
+
+    publishers:
+      - console-log

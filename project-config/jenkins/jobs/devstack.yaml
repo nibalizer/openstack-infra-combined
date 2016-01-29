@@ -1,0 +1,54 @@
+# Devstack unit tests are run via a set of shell scripts with the
+# run_tests.sh entry point
+- job:
+    name: gate-devstack-unit-tests
+    node: bare-trusty
+
+    builders:
+      - revoke-sudo
+      - gerrit-git-prep
+      - shell: |
+          #!/bin/bash -xe
+          ./run_tests.sh
+
+    publishers:
+      - console-log
+      - zuul-swift-upload-console-log
+
+# Devstack does not support "python setup.py publish_sphinx", thus
+# we cannot use the normal docs jobs.
+- job:
+    name: devstack-publish-docs
+    node: bare-trusty
+
+    builders:
+      - revoke-sudo
+      - gerrit-git-prep
+      - tox:
+          envlist: 'docs'
+
+    publishers:
+      - ftp:
+          site: 'docs.openstack.org'
+          source: 'doc/build/html/**'
+          target: 'developer/devstack'
+          remove-prefix: 'doc/build/html'
+          excludes: ''
+      - console-log
+      - zuul-swift-upload-console-log
+
+- job:
+    name: gate-devstack-publish-docs
+    node: bare-trusty
+
+    builders:
+      - revoke-sudo
+      - gerrit-git-prep
+      - tox:
+          envlist: 'docs'
+
+    publishers:
+      - console-log
+      - upload-sphinx-draft
+      - zuul-swift-upload-console-log
+      # TODO(jhesketh): Add job for uploading built docs

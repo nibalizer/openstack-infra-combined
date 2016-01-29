@@ -1,0 +1,57 @@
+- job-template:
+    name: '{name}-infra-docs'
+    node: '{node}'
+
+    builders:
+        - print-template-name:
+            template-name: "{template-name}"
+        - revoke-sudo
+        - gerrit-git-prep
+        - docs
+
+    publishers:
+        - console-log
+        - ftp:
+            site: '{doc-publisher-site}'
+            source: 'doc/build/html/**'
+            target: 'infra/{doc-publisher-folder}'
+            remove-prefix: 'doc/build/html'
+            excludes: ''
+
+- job:
+    name: publish-infra-docs-index
+    description: Render and publish the infra docs index.
+    node: bare-trusty
+
+    builders:
+      - revoke-sudo
+      - gerrit-git-prep
+      - tox:
+          envlist: infra-docs
+
+    publishers:
+      - ftp:
+          site: docs.openstack.org
+          source: 'docs-site/output/index.html'
+          target: '/infra/'
+          remove-prefix: 'docs-site/output/'
+      - console-log
+
+- job:
+    name: gate-infra-docs-index
+    description: Render the infra docs index without publishing it.
+    node: bare-trusty
+
+    builders:
+      - revoke-sudo
+      - gerrit-git-prep
+      - tox:
+          envlist: infra-docs
+
+    publishers:
+      - console-log
+
+- job-group:
+    name: infra-publish-jobs
+    jobs:
+        - '{name}-infra-docs'

@@ -1,0 +1,33 @@
+- job:
+    name: 'dev-zuul-coverage'
+    node: bare-trusty
+
+    builders:
+      - revoke-sudo
+      - gerrit-git-prep
+      - coverage:
+          env: cover
+
+    publishers:
+      - coverage-log
+      - console-log
+
+- job:
+    name: 'periodic-test'
+
+    wrappers:
+      - build-timeout:
+          timeout: 40
+      - timestamps
+
+    builders:
+      - revoke-sudo
+      - branch-git-prep:
+          branch: master
+      - python27
+
+    publishers:
+      - test-results
+      - console-log
+
+    node: bare-trusty

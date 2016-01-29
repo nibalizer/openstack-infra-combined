@@ -1,0 +1,8310 @@
+#
+# The projects in this file are sorted alphabetical.
+#
+
+- project:
+    name: aeromancer
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: anchor
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - 'gate-{name}-tox-{envlist}':
+          envlist: bandit
+
+- project:
+    name: ansible-puppet
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - ansible-lint-jobs
+
+- project:
+    name: ansible-role-diskimage-builder
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - ansible-role-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: ansible-role-jenkins-job-builder
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - ansible-role-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: ansible-role-nodepool
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - ansible-role-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: ansible-role-zuul
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - ansible-role-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: anvil
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - gate-{name}-pylint
+      - gate-anvil-rpms-dsvm-{node}:
+          node:
+            - devstack-centos7
+      - gate-anvil-venv-{node}:
+          node: bare-trusty
+
+- project:
+    name: aodh
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - openstack-publish-jobs
+      - translation-jobs
+      - openstack-releasenotes-jobs
+      - '{pipeline}-aodh-dsvm-functional-{backend}':
+          node: devstack-trusty
+          pipeline: gate
+          backend: hbase
+      - '{pipeline}-aodh-dsvm-functional-{backend}':
+          node: devstack-trusty
+          pipeline: gate
+          backend: mysql
+      - '{pipeline}-aodh-dsvm-functional-{backend}':
+          node: devstack-trusty
+          pipeline: gate
+          backend: postgresql
+      - '{pipeline}-aodh-dsvm-functional-{backend}':
+          node: devstack-trusty
+          pipeline: gate
+          backend: mongodb
+      - 'gate-telemetry-dsvm-integration-{name}'
+
+- project:
+    name: api-site
+    node: bare-trusty
+
+    jobs:
+      - openstack-doc-jobs
+      - manual-translation-jobs
+
+- project:
+    name: api-wg
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: app-catalog
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - javascript-jobs
+
+- project:
+    name: astara
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - hook-{name}-rtfd
+      - '{pipeline}-functional-dsvm-astara{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-functional-dsvm-astara-appliance-src{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: astara-appliance
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: astara-horizon
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: astara-neutron
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: automaton
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - 'lib-forward-testing-{name}'
+
+- project:
+    name: bandit
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - gate-bandit-integration-{target-project}:
+          target-org: openstack
+          target-project:
+            - barbican
+            - glance
+            - keystone
+            - keystonemiddleware
+            - magnum
+            - oslo.vmware
+            - python-keystoneclient
+            - python-magnumclient
+            - sahara
+
+- project:
+    name: barbican
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - translation-jobs
+      - openstack-publish-jobs
+      - openstack-releasenotes-jobs
+      - 'gate-{name}-tox-{envlist}':
+          envlist: bandit
+
+- project:
+    name: barbican-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: bareon
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - pypi-jobs
+      - python-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: bareon-api
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - pypi-jobs
+      - python-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: bareon-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: bashate
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: beaker-localhost
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - 'gate-{name}-rake'
+
+- project:
+    name: beaker-nodepool
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - 'gate-{name}-rake'
+
+- project:
+    name: bifrost
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: bilean
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: bindep
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    doc-publisher-folder: bindep
+
+    jobs:
+      - infra-publish-jobs
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: blazar
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - gate-{name}-pylint
+
+- project:
+    name: blazar-nova
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: bugdaystats
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: castellan
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: cathead
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: ceilometer
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - python-kilo-bitrot-jobs
+      - python-liberty-bitrot-jobs
+      - openstack-publish-jobs
+      - translation-jobs
+      - translation-jobs-liberty
+      - gate-rally-dsvm-fakevirt-{name}
+      - openstack-releasenotes-jobs
+      - 'gate-tempest-dsvm-ceilometer-{backend}-full{job-suffix}':
+          backend: 'mongodb'
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - 'gate-tempest-dsvm-ceilometer-{backend}-full{job-suffix}':
+          backend: 'mysql'
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - 'gate-tempest-dsvm-ceilometer-{backend}-full{job-suffix}':
+          backend: 'postgresql'
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - 'gate-tempest-dsvm-ceilometer-{backend}{job-suffix}':
+          backend: 'es'
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - 'gate-tempest-dsvm-ceilometer-{backend}-full{job-suffix}':
+          backend: 'es'
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - 'gate-tempest-dsvm-ceilometer-{backend}-neutron-full{job-suffix}':
+          backend: 'mysql'
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-ceilometer-dsvm-functional-{backend}{job-suffix}':
+          pipeline: 'gate'
+          backend: 'mongodb'
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-ceilometer-dsvm-functional-{backend}{job-suffix}':
+          pipeline: 'gate'
+          backend: 'mysql'
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-ceilometer-dsvm-functional-{backend}{job-suffix}':
+          node: devstack-trusty
+          pipeline: gate
+          backend: postgresql
+          job-suffix: ''
+          branch-override: default
+      - 'gate-telemetry-dsvm-integration-{name}'
+
+- project:
+    name: ceilometer-powervm
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: ceilometer-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: ceilometer-zvm
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: ceilometermiddleware
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - '{pipeline}-tempest-dsvm-neutron-src-{name}{job-suffix}-plugin':
+          project-repo: ceilometer
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: cerberus
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: cerberus-dashboard
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: cinder
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - python-constraints-jobs
+      - python-kilo-bitrot-jobs
+      - python-liberty-bitrot-jobs
+      - openstack-publish-jobs
+      - gate-{name}-pylint
+      - gate-{name}-pylint-constraints
+      - translation-jobs
+      - translation-jobs-liberty
+      - gate-rally-dsvm-{name}
+      - openstack-releasenotes-jobs
+      - '{pipeline}-cinder-dsvm-apache{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: cinder-specs
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: cisco-ironic-contrib
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: ciwatch
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: cl-openstack-client
+    node: bare-trusty
+
+    jobs:
+      - gate-{name}-run-tests
+
+- project:
+    name: cliff
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - gate-{name}-tox-{envlist}:
+          envlist: neutronclient-tip
+      - gate-{name}-tox-{envlist}:
+          envlist: openstackclient-tip
+      - 'lib-forward-testing-{name}'
+      - openstack-publish-jobs
+
+- project:
+    name: cloud-init
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - gate-{name}-tox-{envlist}:
+          envlist:
+            - py27-coverage
+            - py34-coverage
+
+- project:
+    name: cloudbase-init
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: clouddocs-maven-plugin
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - maven-plugin-jobs
+
+- project:
+    name: cloudkitty
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - openstack-publish-jobs
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: cloudkitty-dashboard
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - openstack-publish-jobs
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: cloudpulse
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: cloudv-ostf-adapter
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: cognitive
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: collectd-ceilometer-plugin
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: compass-core
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: compass-specs
+    node: bare-trusty
+
+    jobs:
+      - gate-{name}-docs
+
+- project:
+    name: compute-hyperv
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: congress
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - '{pipeline}-congress-dsvm-api{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: congress-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: cookbook-openstack-bare-metal
+    node: bare-trusty
+
+    jobs:
+      - chef-test-jobs
+
+- project:
+    name: cookbook-openstack-block-storage
+    node: bare-trusty
+
+    jobs:
+      - chef-test-jobs
+
+- project:
+    name: cookbook-openstack-client
+    node: bare-trusty
+
+    jobs:
+      - chef-test-jobs
+
+- project:
+    name: cookbook-openstack-common
+    node: bare-trusty
+
+    jobs:
+      - chef-test-jobs
+
+- project:
+    name: cookbook-openstack-compute
+    node: bare-trusty
+
+    jobs:
+      - chef-test-jobs
+
+- project:
+    name: cookbook-openstack-dashboard
+    node: bare-trusty
+
+    jobs:
+      - chef-test-jobs
+
+- project:
+    name: cookbook-openstack-data-processing
+    node: bare-trusty
+
+    jobs:
+      - chef-test-jobs
+
+- project:
+    name: cookbook-openstack-database
+    node: bare-trusty
+
+    jobs:
+      - chef-test-jobs
+
+- project:
+    name: cookbook-openstack-identity
+    node: bare-trusty
+
+    jobs:
+      - chef-test-jobs
+
+- project:
+    name: cookbook-openstack-image
+    node: bare-trusty
+
+    jobs:
+      - chef-test-jobs
+
+- project:
+    name: cookbook-openstack-integration-test
+    node: bare-trusty
+
+    jobs:
+      - chef-test-jobs
+
+- project:
+    name: cookbook-openstack-network
+    node: bare-trusty
+
+    jobs:
+      - chef-test-jobs
+
+- project:
+    name: cookbook-openstack-object-storage
+    node: bare-trusty
+
+    jobs:
+      - chef-test-jobs
+
+- project:
+    name: cookbook-openstack-ops-database
+    node: bare-trusty
+
+    jobs:
+      - chef-test-jobs
+
+- project:
+    name: cookbook-openstack-ops-messaging
+    node: bare-trusty
+
+    jobs:
+      - chef-test-jobs
+
+- project:
+    name: cookbook-openstack-orchestration
+    node: bare-trusty
+
+    jobs:
+      - chef-test-jobs
+
+- project:
+    name: cookbook-openstack-telemetry
+    node: bare-trusty
+
+    jobs:
+      - chef-test-jobs
+
+- project:
+    name: cue
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - 'gate-rally-dsvm-cue-{broker}':
+          broker: 'rabbitmq'
+      - 'gate-cue-integration-dsvm-{broker}':
+          broker: 'rabbitmq'
+
+- project:
+    name: cue-dashboard
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: debtcollector
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - 'lib-forward-testing-{name}'
+
+- project:
+    name: defcore
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - openstack-publish-jobs
+      - gate-{name}-docs
+      - gate-{name}-tox-{envlist}:
+          envlist: doc8
+
+- project:
+    name: designate
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - openstack-releasenotes-jobs
+      - pypi-jobs
+      - translation-jobs
+      - gate-rally-dsvm-designate-{name}
+      - 'gate-designate-dsvm-{designate-driver}':
+          node: devstack-trusty
+          designate-driver:
+            - powerdns
+            - bind9
+      - 'gate-designate-dsvm-{designate-driver}-postgres':
+          node: devstack-trusty
+          designate-driver:
+            - powerdns
+      - 'gate-{name}-tox-{envlist}':
+          envlist: bandit
+
+- project:
+    name: designate-dashboard
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - translation-jobs
+      - translation-jobs-liberty
+
+- project:
+    name: designate-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: devstack
+    node: bare-trusty
+
+    jobs:
+      - gate-{name}-bashate
+
+- project:
+    name: devstack-gate
+    node: bare-trusty
+
+    jobs:
+      - gate-{name}-bashate
+
+- project:
+    name: devstack-jobs
+
+    jobs:
+      # Normal gate and check jobs
+      - devstack-jobs:
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      # Stable gate jobs for branchless tempest
+      - devstack-jobs:
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-kilo'
+          branch-override: stable/kilo
+      - devstack-jobs:
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-liberty'
+          branch-override: stable/liberty
+      # Stable check jobs for testing devstack gate
+      # tempest also uses these job definitions
+      - devstack-jobs:
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-kilo-nv'
+          branch-override: stable/kilo
+      - devstack-jobs:
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-liberty-nv'
+          branch-override: stable/liberty
+      # Periodic jobs for various branches
+      - devstack-jobs:
+          pipeline: periodic
+          node: devstack-trusty
+          job-suffix: '-kilo'
+          branch-override: stable/kilo
+      - devstack-jobs:
+          pipeline: periodic
+          node: devstack-trusty
+          job-suffix: '-liberty'
+          branch-override: stable/liberty
+      - devstack-jobs:
+          pipeline: periodic
+          node: devstack-trusty
+          job-suffix: '-master'
+          branch-override: master
+      # Special jobs for devstack-gate
+      - devstack-gate-jobs:
+          node: devstack-trusty
+      - '{pipeline}-grenade-dsvm-multinode{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty-2-node
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-grenade-dsvm-multinode{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty-2-node
+          job-suffix: '-nv'
+          branch-override: default
+      - '{pipeline}-{name}-src-grenade-dsvm-multinode{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty-2-node
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-{name}-src-grenade-dsvm-multinode{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty-2-node
+          job-suffix: '-nv'
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-multinode-full{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty-2-node
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-neutron-multinode-full{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty-2-node
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-neutron-dvr-multinode-full{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty-2-node
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-multinode-live-migration{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty-2-node
+          job-suffix: ''
+          branch-override: default
+      # Experimental jobs for testing dib images.
+      - '{pipeline}-tempest-dsvm-full{job-suffix}':
+          pipeline: experimental
+          node: ubuntu-trusty
+          job-suffix: '-dibtest'
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-neutron-full{job-suffix}':
+          pipeline: experimental
+          node: ubuntu-trusty
+          job-suffix: '-dibtest'
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-multinode-full{job-suffix}':
+          pipeline: experimental
+          node: ubuntu-trusty-2-node
+          job-suffix: '-dibtest'
+          branch-override: default
+      # fedora jobs
+      - '{pipeline}-tempest-dsvm-f{fedora-release}':
+          fedora-release: 23
+          pipeline: gate
+          node: fedora-23
+
+- project:
+    name: devstack-plugin-amqp1
+    node: bare-trusty
+
+    jobs:
+      - gate-{name}-bashate
+      - '{pipeline}-tempest-dsvm-full-{plugin}{job-suffix}':
+          pipeline: gate
+          plugin: amqp1
+          plugin-repo: openstack/devstack-plugin-amqp1
+          job-suffix: ''
+
+- project:
+    name: devstack-plugin-bdd
+    node: bare-trusty
+
+    jobs:
+      - gate-{name}-bashate
+      - '{pipeline}-tempest-dsvm-full-bdd{job-suffix}':
+          node: devstack-trusty
+          pipeline: gate
+          job-suffix: '-nv'
+      - '{pipeline}-tempest-dsvm-full-bdd{job-suffix}':
+          node: devstack-trusty
+          pipeline: gate
+          job-suffix: ''
+
+- project:
+    name: devstack-plugin-ceph
+    node: bare-trusty
+
+    jobs:
+      - gate-{name}-bashate
+      - '{pipeline}-tempest-dsvm-full-devstack-plugin-ceph{job-suffix}':
+          node: devstack-trusty
+          pipeline: gate
+          plugin: ceph
+          plugin-repo: openstack/devstack-plugin-ceph
+          job-suffix: '-nv'
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-full-devstack-plugin-ceph{job-suffix}':
+          node: devstack-trusty
+          pipeline: gate
+          plugin: ceph
+          plugin-repo: openstack/devstack-plugin-ceph
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: devstack-plugin-glusterfs
+    node: bare-trusty
+
+    jobs:
+      - gate-{name}-bashate
+      - '{pipeline}-cinder-tempest-dsvm-glusterfs{job-suffix}':
+          node: devstack-trusty
+          pipeline: gate
+          job-suffix: '-nv'
+      - '{pipeline}-cinder-tempest-dsvm-glusterfs{job-suffix}':
+          node: devstack-trusty
+          pipeline: gate
+          job-suffix: ''
+
+- project:
+    name: devstack-plugin-hdfs
+    node: bare-trusty
+
+    jobs:
+      - gate-{name}-bashate
+      - '{pipeline}-tempest-dsvm-full-{plugin}{job-suffix}':
+          node: devstack-trusty
+          pipeline: gate
+          plugin: hdfs
+          plugin-repo: openstack/devstack-plugin-hdfs
+          job-suffix: ''
+
+- project:
+    name: devstack-plugin-kafka
+    node: bare-trusty
+
+    jobs:
+      - gate-{name}-bashate
+      - '{pipeline}-tempest-dsvm-full-{plugin}{job-suffix}':
+          pipeline: gate
+          plugin: kafka
+          plugin-repo: openstack/devstack-plugin-kafka
+          job-suffix: ''
+
+- project:
+    name: devstack-plugin-pika
+    node: bare-trusty
+    jobs:
+      - gate-{name}-bashate
+
+- project:
+    name: devstack-plugin-sheepdog
+    node: bare-trusty
+
+    jobs:
+      - gate-{name}-bashate
+      - '{pipeline}-tempest-dsvm-full-{plugin}{job-suffix}':
+          pipeline: gate
+          plugin: sheepdog
+          plugin-repo: openstack/devstack-plugin-sheepdog
+          job-suffix: ''
+      - '{pipeline}-tempest-dsvm-full-{plugin}{job-suffix}':
+          pipeline: gate
+          plugin: sheepdog
+          plugin-repo: openstack/devstack-plugin-sheepdog
+          job-suffix: '-nv'
+
+- project:
+    name: devstack-plugin-zmq
+    node: bare-trusty
+
+    jobs:
+      - gate-{name}-bashate
+      - '{pipeline}-tempest-dsvm-full-{plugin}{job-suffix}':
+          pipeline: gate
+          plugin: zmq
+          plugin-repo: openstack/devstack-plugin-zmq
+          job-suffix: ''
+
+- project:
+    name: dib-utils
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: diskimage-builder
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - gate-dib-dsvm-functests-{node}:
+          node: devstack-trusty
+      - gate-dib-dsvm-functests-{node}:
+          node: devstack-centos7
+      - '{pipeline}-tempest-dsvm-ironic-pxe_ssh{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-dib'
+          branch-override: default
+
+- project:
+    name: django_openstack_auth
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - 'lib-forward-testing-{name}'
+      - translation-jobs
+      - translation-jobs-liberty
+      - gate-{name}-tox-{envlist}:
+          envlist:
+            - py27dj18
+            - py27dj19
+
+- project:
+    name: django-openstack-auth-kerberos
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: doc8
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: docs-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: dox
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: dragonflow
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - openstack-publish-jobs
+      - '{pipeline}-tempest-dsvm-dragonflow{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-dragonflow-dsvm-rally{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+      - '{pipeline}-dragonflow-dsvm-fullstack{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: drbd-devstack
+    node: bare-trusty
+
+    jobs:
+      - gate-{name}-bashate
+      - '{pipeline}-tempest-dsvm-full-drbd-devstack{job-suffix}':
+          pipeline: gate
+          job-suffix: '-nv'
+      - '{pipeline}-tempest-dsvm-full-drbd-devstack{job-suffix}':
+          pipeline: gate
+          job-suffix: ''
+
+- project:
+    name: driverlog
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: ec2-api
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - '{pipeline}-functional-{network}-dsvm-ec2api{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          network: 'neutron'
+      - '{pipeline}-functional-{network}-dsvm-ec2api{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          network: 'nova-network'
+
+- project:
+    name: ekko
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: elastic-recheck
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - gate-{name}-pep8
+      - gate-{name}-docs
+      - gate-{name}-python27
+      - 'gate-{name}-tox-{envlist}':
+          envlist: queries
+
+- project:
+    name: election
+    node: bare-trusty
+
+    jobs:
+      - 'gate-{name}-docs'
+
+- project:
+    name: entropy
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: eslint-config-openstack
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - javascript-jobs
+      - publish-to-npm
+
+- project:
+    name: evoque
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: evoque-dashboard
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: faafo
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - openstack-publish-jobs
+      - '{name}-tarball'
+      - gate-{name}-docs
+      - gate-{name}-pep8
+
+- project:
+    name: fairy-slipper
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - openstack-releasenotes-jobs
+
+- project:
+    name: flame
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: freezer
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - gate-{name}-pylint
+
+- project:
+    name: freezer-api
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - gate-{name}-pylint
+
+- project:
+    name: freezer-web-ui
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - gate-{name}-pylint
+
+- project:
+    name: fuel-agent
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: fuel-astute
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-module-unit
+
+- project:
+    name: fuel-dev-tools
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: fuel-devops
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: fuel-docs
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - gate-{name}-docs
+
+- project:
+    name: fuel-library
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+
+- project:
+    name: fuel-menu
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: fuel-mirror
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: fuel-nailgun-agent
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-module-unit
+
+- project:
+    name: fuel-octane
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: fuel-ostf
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: fuel-plugins
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: fuel-qa
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: fuel-specs
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: fuel-stats
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: fuel-upgrade
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: fuel-web
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: futurist
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - 'lib-forward-testing-{name}'
+
+- project:
+    name: gantt
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - gate-{name}-pylint
+
+- project:
+    name: gce-api
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - '{pipeline}-functional-neutron-dsvm-gceapi{job-suffix}':
+            pipeline: gate
+            node: devstack-trusty
+            job-suffix: ''
+            branch-override: default
+      - '{pipeline}-functional-nova-network-dsvm-gceapi{job-suffix}':
+            pipeline: gate
+            node: devstack-trusty
+            job-suffix: ''
+            branch-override: default
+
+- project:
+    name: gear
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: gearman-plugin
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - jenkins-plugin-jobs
+
+- project:
+    name: gerrit
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    gerrit-project: 'https://git.openstack.org/openstack-infra/gerrit'
+
+    jobs:
+      - '{plugin-name}-gerrit-plugin-{plugin-branch}':
+          gerrit-branch: 'openstack/2.8.4'
+          plugin-name: 'javamelody'
+          plugin-project: 'https://gerrit.googlesource.com/plugins/{plugin-name}'
+          plugin-branch: 'stable-2.8'
+      - '{plugin-name}-gerrit-plugin-{plugin-branch}':
+          gerrit-branch: 'openstack/2.11.4'
+          plugin-name: 'javamelody'
+          plugin-project: 'https://gerrit.googlesource.com/plugins/{plugin-name}'
+          plugin-branch: 'stable-2.11'
+
+- project:
+    name: gerrit-dash-creator
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: gerritbot
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: gerritlib
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: gertty
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: git-restack
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    doc-publisher-folder: git-restack
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - infra-publish-jobs
+
+- project:
+    name: git-review
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    doc-publisher-folder: git-review
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - infra-publish-jobs
+
+- project:
+    name: git-upstream
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: gitdm
+    node: bare-trusty
+
+    jobs:
+      - '{pipeline}-gitdm':
+          pipeline: gate
+      - '{pipeline}-gitdm':
+          pipeline: periodic
+
+- project:
+    name: glance
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - python-constraints-jobs
+      - python-kilo-bitrot-jobs
+      - python-liberty-bitrot-jobs
+      - openstack-publish-jobs
+      - translation-jobs
+      - translation-jobs-liberty
+      - gate-rally-dsvm-{name}
+      - openstack-releasenotes-jobs
+      - 'gate-{name}-tox-{envlist}':
+          envlist: bandit
+
+- project:
+    name: glance-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: glance_store
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - translation-jobs
+      - 'lib-forward-testing-{name}'
+      - '{pipeline}-glance_store-dsvm-functional-{driver}':
+          driver: filesystem
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-full-ceph-src-{name}{job-suffix}':
+          node: devstack-trusty
+          pipeline: gate
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: glean
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    doc-publisher-folder: glean
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - '{name}-infra-docs'
+
+- project:
+    name: gnocchi
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - gate-{name}-tox-{envlist}:
+          envlist:
+            - py27-mysql
+            - py27-postgresql
+            - py34-mysql
+            - py34-postgresql
+      - pypi-jobs
+      - gate-{name}-bashate
+      - '{pipeline}-gnocchi-dsvm-functional-{storagedriver}-{sqldriver}':
+          node: devstack-trusty
+          pipeline: gate
+          storagedriver: file
+          sqldriver: mysql
+      - '{pipeline}-gnocchi-dsvm-functional-{storagedriver}-{sqldriver}':
+          node: devstack-trusty
+          pipeline: gate
+          storagedriver: swift
+          sqldriver: postgresql
+      - '{pipeline}-gnocchi-dsvm-functional-{storagedriver}-{sqldriver}':
+          node: devstack-trusty
+          pipeline: gate
+          storagedriver: ceph
+          sqldriver: mysql
+      - '{pipeline}-gnocchi-dsvm-functional-{storagedriver}-{sqldriver}':
+          node: devstack-trusty
+          pipeline: gate
+          storagedriver: influxdb
+          sqldriver: mysql
+      - 'gate-telemetry-dsvm-integration-{name}'
+      - openstack-publish-jobs
+
+- project:
+    name: governance
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    docroot: governance
+
+    jobs:
+      - 'gate-{name}-docs'
+      - 'static-{name}-publish'
+
+- project:
+    name: grafyaml
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    doc-publisher-folder: grafyaml
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - '{name}-infra-docs'
+
+- project:
+    name: group-based-policy
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - '{pipeline}-group-based-policy-dsvm-functional{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-group-based-policy-dsvm-rally{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: group-based-policy-automation
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: group-based-policy-specs
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: group-based-policy-ui
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: groups
+    node: bare-precise
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - gate-groups-unittests
+      - 'groups-release-{job-suffix}':
+          job-suffix: 'master'
+      - 'groups-release-{job-suffix}':
+          job-suffix: 'branch'
+
+- project:
+    name: groups-static-pages
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: ha-guide
+    node: bare-trusty
+
+    jobs:
+      - openstack-doc-jobs
+      - manual-translation-jobs
+
+- project:
+    name: hacking
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - openstack-publish-jobs
+      - python-jobs
+      - pypi-jobs
+      - gate-hacking-integration-{target-project}:
+          target-org: openstack
+          target-project: nova
+
+- project:
+    name: heat
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - '{pipeline}-heat-dsvm-functional-{engine}-{datastore}{job-suffix}':
+          datastore: mysql
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          engine: orig
+      - '{pipeline}-heat-dsvm-functional-{engine}-{datastore}{job-suffix}':
+          datastore: postgres
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          engine: orig
+      - '{pipeline}-heat-dsvm-functional-{engine}-{datastore}{job-suffix}':
+          datastore: mysql
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          engine: convg
+      - '{pipeline}-tempest-dsvm-heat{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-heat-apache{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-grenade-dsvm-heat{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-grenade-dsvm-heat{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+      - python-kilo-bitrot-jobs
+      - python-liberty-bitrot-jobs
+      - openstack-publish-jobs
+      - translation-jobs
+      - translation-jobs-liberty
+      - gate-rally-dsvm-fakevirt-{name}
+      - openstack-releasenotes-jobs
+
+- project:
+    name: heat-cfnclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: heat-cfntools
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: heat-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: heat-templates
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: heat-translator
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: horizon
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - python-kilo-bitrot-jobs
+      - python-liberty-bitrot-jobs
+      - openstack-publish-jobs
+      - javascript-jobs
+      - translation-jobs
+      - translation-jobs-liberty
+      - openstack-releasenotes-jobs
+      - gate-{name}-tox-{envlist}:
+          envlist:
+            - py27dj18
+            - py27dj19
+
+- project:
+    name: horizon-cisco-ui
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - translation-jobs
+
+- project:
+    name: i18n
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - openstack-publish-jobs
+      - gate-{name}-docs
+      - gate-{name}-requirements
+
+- project:
+    name: inception
+    node: bare-trusty
+
+    jobs:
+      - gate-{name}-pep8
+
+- project:
+    name: infra-ansible
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - ansible-lint-jobs
+
+- project:
+    name: infra-manual
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+    doc-publisher-folder: manual
+
+    jobs:
+      - infra-publish-jobs
+      - 'gate-{name}-docs'
+
+- project:
+    name: infra-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: instack
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: instack-undercloud
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - python-jobs
+
+- project:
+    name: intel-nfv-ci-tests
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: ironic
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - python-kilo-bitrot-jobs
+      - python-liberty-bitrot-jobs
+      - translation-jobs
+      - translation-jobs-liberty
+      - openstack-releasenotes-jobs
+      - '{pipeline}-ironic-dsvm-functional{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-ironic-pxe_ssh{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-ironic-pxe_ipa-full{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-ironic-pxe_ssh-postgres{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-ironic-agent_ssh{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-ironic-pxe_ipa{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-ironic-pxe_ipa-src{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-ironic-pxe_ipa-ipxe{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-ironic-parallel{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+      - '{pipeline}-ironic-inspector-dsvm-{ramdisk}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+          ramdisk: ipa
+      - '{pipeline}-tempest-dsvm-ironic-pxe_libvirt{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+      - '{trigger}-tripleo-ci-{jobname}':
+          jobname: 'f22-nonha'
+          type: 'nonha'
+          node: 'tripleo-f22'
+          trigger: 'gate'
+          branch-override: default
+      - '{trigger}-tripleo-ci-{jobname}':
+          jobname: 'f22-ha'
+          type: 'ha'
+          node: 'tripleo-f22'
+          trigger: 'gate'
+          branch-override: default
+      - '{trigger}-tripleo-ci-{jobname}':
+          jobname: 'f22-ceph'
+          type: 'ceph'
+          node: 'tripleo-f22'
+          trigger: 'gate'
+          branch-override: default
+      - '{trigger}-tripleo-ci-{jobname}':
+          jobname: 'f22-nonha'
+          type: 'periodic-nonha'
+          node: 'tripleo-f22'
+          trigger: 'periodic'
+          branch-override: default
+      - '{trigger}-tripleo-ci-{jobname}':
+          jobname: 'f22-ha'
+          type: 'periodic-ha'
+          node: 'tripleo-f22'
+          trigger: 'periodic'
+          branch-override: default
+      - '{trigger}-tripleo-ci-{jobname}':
+          jobname: 'f22-ceph'
+          type: 'periodic-ceph'
+          node: 'tripleo-f22'
+          trigger: 'periodic'
+          branch-override: default
+      - '{trigger}-tripleo-ci-{jobname}':
+          jobname: 'f22-ha-liberty'
+          type: 'periodic-ha-liberty'
+          node: 'tripleo-f22'
+          trigger: 'periodic'
+          branch-override: stable/liberty
+      - '{trigger}-tripleo-ci-{jobname}':
+          jobname: 'f22-containers'
+          type: 'containers'
+          node: 'tripleo-f22'
+          trigger: 'gate'
+          branch-override: default
+
+- project:
+    name: ironic-inspector
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - translation-jobs
+      - openstack-releasenotes-jobs
+      - gate-{name}-tox-{envlist}:
+          envlist: func
+      - '{pipeline}-ironic-inspector-dsvm-{ramdisk}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          ramdisk: 'dib'
+      - '{pipeline}-ironic-inspector-dsvm-{ramdisk}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          ramdisk: 'ipa'
+
+- project:
+    name: ironic-inspector-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+      - gate-{name}-pep8
+
+- project:
+    name: ironic-lib
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - '{pipeline}-tempest-dsvm-ironic-lib-src{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: ironic-python-agent
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - openstack-releasenotes-jobs
+
+- project:
+    name: ironic-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: ironic-staging-drivers
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: ironic-ui
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - javascript-jobs
+      - openstack-publish-jobs
+      - translation-jobs
+
+- project:
+    name: ironic-webclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - javascript-jobs
+      - '{name}-npm-publish-tarball'
+
+- project:
+    name: jeepyb
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - gate-{name}-pep8
+      - '{name}-tarball'
+      - pypi-jobs
+
+- project:
+    name: jenkins-job-builder
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    doc-publisher-folder: jenkins-job-builder
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - infra-publish-jobs
+      - 'gate-{name}-tox-{envlist}':
+          envlist: docs-linkcheck
+
+- project:
+    name: keystone
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - python-kilo-bitrot-jobs
+      - python-liberty-bitrot-jobs
+      - openstack-publish-jobs
+      - translation-jobs
+      - translation-jobs-liberty
+      - gate-rally-dsvm-{name}
+      - openstack-releasenotes-jobs
+      - 'gate-{name}-tox-{envlist}':
+          envlist: bandit
+      - 'gate-{name}-tox-{envlist}':
+          envlist: legacy_drivers
+      - '{pipeline}-tempest-dsvm-keystone-eventlet-full{job-suffix}':
+          pipeline: gate
+          job-suffix: ''
+          branch-override: default
+          node: devstack-trusty
+
+- project:
+    name: keystone-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: keystoneauth
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - openstack-releasenotes-jobs
+      - 'lib-forward-testing-{name}'
+
+- project:
+    name: keystonemiddleware
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - openstack-releasenotes-jobs
+      - 'lib-forward-testing-{name}'
+      - 'gate-{name}-tox-{envlist}':
+          envlist: bandit
+
+- project:
+    name: kiloeyes
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: kingbird
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: kite
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - openstack-publish-jobs
+      - python-jobs
+
+- project:
+    name: kloudbuster
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: kolla
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - '{pipeline}-kolla-dsvm-{action}-{distro}-{type}':
+          action: build
+          distro: centos
+          node: 'devstack-centos7'
+          pipeline: gate
+          type: binary
+      - '{pipeline}-kolla-dsvm-{action}-{distro}-{type}':
+          action: deploy
+          distro: centos
+          node: 'devstack-centos7'
+          pipeline: gate
+          type: binary
+      - '{pipeline}-kolla-dsvm-{action}-{distro}-{type}':
+          action: build
+          distro: centos
+          node: 'devstack-centos7'
+          pipeline: gate
+          type: source
+      - '{pipeline}-kolla-dsvm-{action}-{distro}-{type}':
+          action: deploy
+          distro: centos
+          node: 'devstack-centos7'
+          pipeline: gate
+          type: source
+      - '{pipeline}-kolla-dsvm-{action}-{distro}-{type}':
+          action: build
+          distro: ubuntu
+          node: devstack-trusty
+          pipeline: gate
+          type: source
+      - '{pipeline}-kolla-dsvm-{action}-{distro}-{type}':
+          action: deploy
+          distro: ubuntu
+          node: devstack-trusty
+          pipeline: gate
+          type: source
+      - '{pipeline}-kolla-dsvm-{action}-{distro}-{type}':
+          action: deploy-multinode
+          distro: ubuntu
+          node: 'devstack-trusty-2-node'
+          pipeline: experimental
+          type: source
+
+- project:
+    name: kolla-mesos
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: kosmos
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: kosmos-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: kuryr
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - '{pipeline}-install-dsvm-kuryr{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-kuryr-dsvm-fullstack{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+      - '{pipeline}-kuryr-dsvm-rally{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: kwapi
+    node: bare-trusty
+
+    jobs:
+      - gate-{name}-pep8
+
+- project:
+    name: lodgeit
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: log_processor
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    doc-publisher-folder: log_processor
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - infra-publish-jobs
+
+- project:
+    name: magnum
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - translation-jobs
+      - '{pipeline}-functional-dsvm-magnum-{coe}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          coe: 'api'
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-functional-dsvm-magnum-{coe}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          coe: 'k8s'
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-functional-dsvm-magnum-{coe}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          coe: 'swarm'
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-functional-dsvm-magnum-{coe}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          coe: 'mesos'
+          job-suffix: ''
+          branch-override: default
+      - 'gate-{name}-tox-{envlist}':
+          envlist: bandit
+
+- project:
+    name: magnum-ui
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - translation-jobs
+
+- project:
+    name: manila
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - gate-{name}-pylint
+      - gate-{name}-tox-{envlist}:
+          envlist: genconfig
+      - openstack-publish-jobs
+      - translation-jobs
+      - openstack-releasenotes-jobs
+      - 'gate-manila-tempest-dsvm-{description}':
+          description: neutron-postgres
+          postgres_enabled: '1'
+          dhss: '1'
+          back_end_type: 'singlebackend'
+          driver: 'generic'
+          test_type: 'api'
+      - 'gate-manila-tempest-dsvm-{description}':
+          description: neutron
+          postgres_enabled: '0'
+          dhss: '1'
+          back_end_type: 'singlebackend'
+          driver: 'generic'
+          test_type: 'api'
+      - 'gate-manila-tempest-dsvm-{description}':
+          description: neutron-multibackend
+          postgres_enabled: '0'
+          dhss: '1'
+          back_end_type: 'multibackend'
+          driver: 'generic'
+          test_type: 'api'
+      - 'gate-manila-tempest-dsvm-{description}':
+          description: neutron-postgres-lvm-multibackend
+          postgres_enabled: '1'
+          dhss: '0'
+          back_end_type: 'multibackend'
+          driver: 'lvm'
+          test_type: 'api'
+      - 'gate-manila-tempest-dsvm-{description}':
+          description: neutron-no-share-servers-multibackend
+          postgres_enabled: '0'
+          dhss: '0'
+          back_end_type: 'multibackend'
+          driver: 'generic'
+          test_type: 'api'
+      - 'gate-manila-tempest-dsvm-{description}':
+          description: neutron-scenario-multibackend
+          postgres_enabled: '0'
+          dhss: '1'
+          back_end_type: 'multibackend'
+          driver: 'generic'
+          test_type: 'scenario'
+
+- project:
+    name: manila-image-elements
+    tarball-site: tarballs.openstack.org
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - gate-{name}-pep8
+      - gate-{name}-docs
+      - 'gate-manila-publishimage-{image-name}':
+          image-name: generic
+      - 'gate-manila-buildimage-{image-name}':
+          image-name: generic
+
+- project:
+    name: manila-ui
+    tarball-site: tarballs.openstack.org
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: marshal
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: merlin
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - javascript-jobs
+      - '{name}-js-release-{job-suffix}':
+          job-suffix: 'master'
+      - '{name}-js-release-{job-suffix}':
+          job-suffix: 'branch'
+
+- project:
+    name: mistral
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - openstack-publish-jobs
+      - '{pipeline}-{component}-devstack-dsvm':
+          pipeline: gate
+          node: devstack-trusty
+          component: mistral
+      - gate-rally-dsvm-mistral-{name}:
+          name: task
+      - gate-{name}-tox-{envlist}:
+          envlist: unit-postgresql
+      - openstack-releasenotes-jobs
+
+- project:
+    name: mistral-dashboard
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: mistral-extra
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: mistral-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: monasca-agent
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: monasca-api
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - maven-plugin-jobs
+
+- project:
+    name: monasca-ceilometer
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: monasca-common
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - maven-plugin-jobs
+
+- project:
+    name: monasca-log-api
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - maven-plugin-jobs
+
+- project:
+    name: monasca-notification
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: monasca-persister
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - maven-plugin-jobs
+
+- project:
+    name: monasca-statsd
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: monasca-thresh
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - maven-plugin-jobs
+
+- project:
+    name: monasca-ui
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: monitoring-for-openstack
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: mox3
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: murano
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - gate-{name}-pylint
+      - pypi-jobs
+      - openstack-publish-jobs
+      - python-kilo-bitrot-jobs
+      - python-liberty-bitrot-jobs
+      - openstack-releasenotes-jobs
+      - gate-rally-dsvm-murano-{name}:
+          name: task
+      - 'gate-tempest-dsvm-murano-{mode}{job-suffix}':
+          mode: 'cfapi'
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - 'gate-tempest-dsvm-murano-{mode}{job-suffix}':
+          mode: 'api'
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - translation-jobs
+
+- project:
+    name: murano-agent
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - openstack-releasenotes-jobs
+
+- project:
+    name: murano-dashboard
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - javascript-jobs
+      - openstack-releasenotes-jobs
+      - translation-jobs
+
+- project:
+    name: murano-specs
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: namos
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: nerd-reviewer
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: network-checker
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - pypi-jobs
+      - python-jobs
+
+- project:
+    name: networking-6wind
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: networking-ale-omniswitch
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: networking-arista
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: networking-bagpipe
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: networking-bgpvpn
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - '{pipeline}-install-dsvm-networking-bgpvpn{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-install-dsvm-networking-bgpvpn-bagpipe{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: networking-bigswitch
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: networking-brocade
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: networking-calico
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: networking-cisco
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: networking-edge-vpn
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: networking-fortinet
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: networking-fujitsu
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: networking-generic-switch
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: networking-hyperv
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: networking-infoblox
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: networking-l2gw
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - openstack-publish-jobs
+      - translation-jobs
+
+- project:
+    name: networking-lenovo
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: networking-midonet
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - openstack-publish-jobs
+      - '{pipeline}-tempest-dsvm-networking-midonet-v1{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-networking-midonet-v2{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-networking-midonet-ml2{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: networking-mlnx
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: networking-nec
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: networking-odl
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - '{pipeline}-tempest-dsvm-networking-odl-{odl-release-base}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          odl-release-base: 'lithium-snapshot'
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-networking-odl-{odl-release-base}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          odl-release-base: 'beryllium-snapshot'
+          branch-override: default
+
+- project:
+    name: networking-ofagent
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - python-constraints-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - '{pipeline}-tempest-dsvm-networking-ofagent{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-networking-ofagent{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-liberty'
+          branch-override: stable/liberty
+      - '{pipeline}-tempest-dsvm-networking-ofagent{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-kilo'
+          branch-override: stable/kilo
+
+- project:
+    name: networking-onos
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - '{pipeline}-tempest-dsvm-networking-onos{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: networking-ovn
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - translation-jobs
+      - pypi-jobs
+      - openstack-publish-jobs
+      - '{pipeline}-tempest-dsvm-networking-ovn{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-networking-ovn-dsvm-rally{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: networking-ovs-dpdk
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: networking-plumgrid
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: networking-powervm
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: networking-sfc
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: networking-vsphere
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: networking-zvm
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: neutron
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - python-constraints-jobs
+      - python-kilo-bitrot-jobs
+      - python-liberty-bitrot-jobs
+      - openstack-publish-jobs
+      - gate-rally-dsvm-neutron-{name}
+      - translation-jobs
+      - translation-jobs-liberty
+      - openstack-releasenotes-jobs
+      - '{pipeline}-grenade-dsvm-neutron-multinode{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty-2-node
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-neutron-dsvm-functional{python}{job-suffix}':
+          pipeline: gate
+          python: ''
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-neutron-dsvm-functional{python}{job-suffix}':
+          pipeline: gate
+          python: '-py34'
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-neutron-dsvm-functional{python}{job-suffix}':
+          pipeline: gate
+          python: ''
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+      - '{pipeline}-neutron-dsvm-fullstack{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-neutron-dsvm-api{which}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          which: ''
+      - '{pipeline}-neutron-dsvm-api{which}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          which: '-pecan'
+      - '{pipeline}-tempest-dsvm-neutron-linuxbridge{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-neutron{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-neutron-ipv6only{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-neutron-serviceipv6{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-neutron-{which}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          which: pecan
+
+- project:
+    name: neutron-classifier
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: neutron-fwaas
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - translation-jobs
+      - python-constraints-jobs
+      - python-kilo-bitrot-jobs
+      - python-liberty-bitrot-jobs
+      - openstack-publish-jobs
+      - openstack-releasenotes-jobs
+      - '{pipeline}-neutron-fwaas-dsvm-api{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-neutron-fwaas-dsvm-functional{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: neutron-lbaas
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - translation-jobs
+      - python-constraints-jobs
+      - python-kilo-bitrot-jobs
+      - python-liberty-bitrot-jobs
+      - openstack-publish-jobs
+      - openstack-releasenotes-jobs
+      - '{pipeline}-neutron-{lbaasversion}-dsvm-{lbaastest}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          lbaasversion: lbaasv2
+          lbaastest: scenario
+      - '{pipeline}-neutron-{lbaasversion}-dsvm-{lbaastest}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          lbaasversion: lbaasv2
+          lbaastest: minimal
+      - '{pipeline}-neutron-{lbaasversion}-dsvm-{lbaastest}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          lbaasversion: lbaasv1
+          lbaastest: api
+      - '{pipeline}-neutron-{lbaasversion}-dsvm-{lbaastest}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          lbaasversion: lbaasv2-octavia
+          lbaastest: api
+      - '{pipeline}-neutron-{lbaasversion}-dsvm-{lbaastest}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          lbaasversion: lbaasv2
+          lbaastest: healthmonitor
+      - '{pipeline}-neutron-{lbaasversion}-dsvm-{lbaastest}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          lbaasversion: lbaasv2
+          lbaastest: listener
+      - '{pipeline}-neutron-{lbaasversion}-dsvm-{lbaastest}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          lbaasversion: lbaasv2
+          lbaastest: loadbalancer
+      - '{pipeline}-neutron-{lbaasversion}-dsvm-{lbaastest}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          lbaasversion: lbaasv2
+          lbaastest: member
+      - '{pipeline}-neutron-{lbaasversion}-dsvm-{lbaastest}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          lbaasversion: lbaasv2
+          lbaastest: pool
+
+- project:
+    name: neutron-lbaas-dashboard
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: neutron-lib
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - translation-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - '{pipeline}-tempest-dsvm-neutron-src-{name}{job-suffix}':
+          name: neutron-lib
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: neutron-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: neutron-vpnaas
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - translation-jobs
+      - python-constraints-jobs
+      - python-kilo-bitrot-jobs
+      - python-liberty-bitrot-jobs
+      - openstack-publish-jobs
+      - openstack-releasenotes-jobs
+      - '{pipeline}-neutron-vpnaas-dsvm-{vpnaastest}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          vpnaastest: functional
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-neutron-vpnaas-dsvm-{vpnaastest}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          vpnaastest: functional-sswan
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: nodepool
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    doc-publisher-folder: nodepool
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - infra-publish-jobs
+      - '{pipeline}-dsvm-nodepool{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: 'default'
+      - '{pipeline}-dsvm-nodepool-src-shade{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: 'default'
+
+- project:
+    name: nomad
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: nose-html-output
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: nova
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - python-kilo-bitrot-jobs
+      - python-liberty-bitrot-jobs
+      - openstack-publish-jobs
+      - gate-{name}-commit-message
+      - gate-{name}-pylint
+      - gate-{name}-pip-check-reqs
+      - 'gate-{name}-tox-{envlist}':
+          envlist:
+            - functional
+      - translation-jobs
+      - translation-jobs-liberty
+      - openstack-releasenotes-jobs
+
+- project:
+    name: nova-docker
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: nova-powervm
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: nova-solver-scheduler
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: nova-specs
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - specs-jobs
+      - gate-{name}-pep8
+
+- project:
+    name: nova-zvm-virt-driver
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: octavia
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - openstack-publish-jobs
+      - pypi-jobs
+      - python-jobs
+      - openstack-releasenotes-jobs
+
+- project:
+    name: ooi
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: opencafe
+    node: bare-trusty
+
+    jobs:
+      - gate-{name}-pep8
+
+- project:
+    name: openstack-ansible
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - openstack-publish-jobs
+      - openstack-releasenotes-jobs
+      - 'gate-{name}-docs'
+      - 'gate-{name}-lint'
+      - 'gate-{name}-pep8'
+      # This check uses the newer 'ubuntu-trusty' image which
+      # is consistent between cloud providers. It is in the
+      # final stage of testing.
+      - 'gate-{name}-commit{job-suffix}':
+          node: 'ubuntu-trusty'
+          job-suffix: '-nv'
+      # This check uses the 'devstack-trusty' image which is
+      # inconsistent between cloud providers. This will be
+      # removed once gate-openstack-ansible-commit is converted
+      # to a voting check.
+      - 'gate-{name}-dsvm-commit':
+          node: devstack-trusty
+
+- project:
+    name: openstack-ansible-apt_package_pinning
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - ansible-role-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: openstack-ansible-galera_client
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - ansible-role-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: openstack-ansible-galera_server
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - ansible-role-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: openstack-ansible-lxc_container_create
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - ansible-role-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: openstack-ansible-lxc_hosts
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - ansible-role-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: openstack-ansible-memcached_server
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - ansible-role-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: openstack-ansible-openstack_hosts
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - ansible-role-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: openstack-ansible-pip_install
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - ansible-role-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: openstack-ansible-pip_lock_down
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - ansible-role-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: openstack-ansible-plugins
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - openstack-publish-jobs
+      - 'gate-{name}-docs'
+      - 'gate-{name}-lint'
+      - 'gate-{name}-pep8'
+
+- project:
+    name: openstack-ansible-py_from_git
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - ansible-role-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: openstack-ansible-rabbitmq_server
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - ansible-role-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: openstack-ansible-repo_server
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - ansible-role-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: openstack-ansible-rsyslog_client
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - ansible-role-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: openstack-ansible-rsyslog_server
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - ansible-role-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: openstack-ansible-security
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - ansible-role-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: openstack-ansible-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: openstack-chef-repo
+    node: bare-trusty
+
+    jobs:
+      - gate-openstack-chef-repo
+      - chef-test-jobs
+
+- project:
+    name: openstack-chef-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: openstack-doc-tools
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - gate-{name}-linters
+      - gate-{name}-requirements
+      - '{name}-tarball'
+      - pypi-jobs
+      - openstack-releasenotes-jobs
+
+- project:
+    name: openstack-health
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - javascript-jobs
+
+- project:
+    name: openstack-manuals
+    node: bare-trusty
+
+    jobs:
+      - openstack-doc-jobs
+      - manual-translation-jobs
+      - translation-jobs-liberty
+
+- project:
+    name: openstack-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: openstack-user-stories
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: openstack-ux
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: openstackdocstheme
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - openstack-releasenotes-jobs
+      - pypi-jobs
+
+- project:
+    name: openstackid
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    doc-publisher-folder: openstackid
+
+    jobs:
+      - gate-openstackid-unittests
+      - 'openstackid-release-{job-suffix}':
+          job-suffix: 'master'
+      - 'openstackid-release-{job-suffix}':
+          job-suffix: 'branch'
+      - infra-publish-jobs
+      - 'gate-{name}-docs'
+
+- project:
+    name: operations-guide
+    node: bare-trusty
+
+    jobs:
+      - openstack-doc-jobs
+      - manual-translation-jobs
+
+- project:
+    name: os-apply-config
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: os-brick
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - openstack-publish-jobs
+      - pypi-jobs
+      - python-jobs
+      - openstack-releasenotes-jobs
+      - 'lib-forward-testing-{name}'
+      - '{pipeline}-tempest-dsvm-full-ceph-src-{name}{job-suffix}':
+          node: devstack-trusty
+          pipeline: gate
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-full-lio-src-{name}{job-suffix}':
+          node: devstack-trusty
+          pipeline: gate
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: os-client-config
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - openstack-publish-jobs
+      - openstack-releasenotes-jobs
+
+- project:
+    name: os-cloud-config
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: os-collect-config
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: os-loganalyze
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: os-net-config
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: os-performance-tools
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: os-refresh-config
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: os-testr
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: os-vif
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: os-win
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: oslo-cookiecutter
+    node: bare-trusty
+
+    jobs:
+      - gate-{name}-tox-{envlist}:
+          envlist: cookiecutter
+
+- project:
+    name: oslo-incubator
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - openstack-publish-jobs
+
+- project:
+    name: oslo-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: oslo.cache
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - translation-jobs
+      - 'lib-forward-testing-{name}'
+      - 'stable-compat-jobs-{name}'
+
+- project:
+    name: oslo.concurrency
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - translation-jobs
+      - 'lib-forward-testing-{name}'
+      - 'stable-compat-jobs-{name}'
+
+- project:
+    name: oslo.config
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - 'lib-forward-testing-{name}'
+      - 'stable-compat-jobs-{name}'
+
+- project:
+    name: oslo.context
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - 'lib-forward-testing-{name}'
+      - 'stable-compat-jobs-{name}'
+
+- project:
+    name: oslo.db
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    envlist:
+      - sqla_09
+      - mysql-python
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - translation-jobs
+      - 'gate-{name}-tox-{envlist}'
+      - 'lib-forward-testing-{name}'
+      - 'stable-compat-jobs-{name}'
+      - '{pipeline}-tempest-dsvm-largeops-src-{name}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: oslo.i18n
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - translation-jobs
+      - 'lib-forward-testing-{name}'
+      - 'stable-compat-jobs-{name}'
+
+- project:
+    name: oslo.log
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - translation-jobs
+      - 'lib-forward-testing-{name}'
+      - 'stable-compat-jobs-{name}'
+      - '{pipeline}-tempest-dsvm-largeops-src-{name}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: oslo.messaging
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - translation-jobs
+      - 'lib-forward-testing-{name}'
+      - 'stable-compat-jobs-{name}'
+      - '{pipeline}-tempest-dsvm-largeops-src-{name}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-{name}-src-grenade-dsvm{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-{name}-src-grenade-dsvm-multinode{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty-2-node
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-{name}-src-grenade-dsvm-multinode{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty-2-node
+          job-suffix: '-nv'
+          branch-override: default
+      - '{pipeline}-oslo.messaging-dsvm-functional-{driver}{ostype}':
+          driver: rabbit
+          pipeline: gate
+          node: devstack-trusty
+          ostype: ''
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-oslo.messaging-dsvm-functional-{driver}{ostype}':
+          driver: qpid
+          pipeline: gate
+          node: devstack-trusty
+          ostype: ''
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-oslo.messaging-dsvm-functional-{driver}{ostype}':
+          driver: zeromq
+          pipeline: gate
+          node: devstack-trusty
+          ostype: ''
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-oslo.messaging-dsvm-functional-{driver}{ostype}':
+          driver: pika
+          pipeline: gate
+          node: devstack-trusty
+          ostype: ''
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-oslo.messaging-dsvm-functional-{driver}{ostype}':
+          driver: amqp1
+          pipeline: gate
+          node: 'devstack-centos7'
+          ostype: '-centos7'
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-oslo.messaging-src-dsvm-full-{plugin}{ostype}{job-suffix}':
+          pipeline: gate
+          plugin: zmq
+          node: devstack-trusty
+          ostype: ''
+          plugin-repo: openstack/devstack-plugin-zmq
+          job-suffix: ''
+      - '{pipeline}-oslo.messaging-src-dsvm-full-{plugin}{ostype}{job-suffix}':
+          pipeline: gate
+          plugin: amqp1
+          node: 'devstack-centos7'
+          ostype: '-centos7'
+          plugin-repo: openstack/devstack-plugin-amqp1
+          job-suffix: ''
+      - '{pipeline}-oslo.messaging-src-dsvm-full-{plugin}{ostype}{job-suffix}':
+          pipeline: gate
+          plugin: pika
+          node: devstack-trusty
+          ostype: ''
+          plugin-repo: openstack/devstack-plugin-pika
+          job-suffix: ''
+      - 'gate-telemetry-dsvm-integration-{name}'
+
+- project:
+    name: oslo.middleware
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - translation-jobs
+      - 'lib-forward-testing-{name}'
+      - 'stable-compat-jobs-{name}'
+
+- project:
+    name: oslo.policy
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - translation-jobs
+      - 'lib-forward-testing-{name}'
+      - 'stable-compat-jobs-{name}'
+
+- project:
+    name: oslo.privsep
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - translation-jobs
+      - 'lib-forward-testing-{name}'
+
+- project:
+    name: oslo.reports
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - translation-jobs
+      - 'lib-forward-testing-{name}'
+      - 'stable-compat-jobs-{name}'
+
+- project:
+    name: oslo.rootwrap
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - 'lib-forward-testing-{name}'
+      - 'stable-compat-jobs-{name}'
+      - '{pipeline}-tempest-dsvm-largeops-src-{name}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: oslo.serialization
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - 'lib-forward-testing-{name}'
+      - 'stable-compat-jobs-{name}'
+
+- project:
+    name: oslo.service
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - translation-jobs
+      - 'lib-forward-testing-{name}'
+      - 'stable-compat-jobs-{name}'
+
+- project:
+    name: oslo.utils
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - translation-jobs
+      - 'lib-forward-testing-{name}'
+      - 'stable-compat-jobs-{name}'
+
+- project:
+    name: oslo.versionedobjects
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - translation-jobs
+      - 'lib-forward-testing-{name}'
+      - 'stable-compat-jobs-{name}'
+      - '{pipeline}-{name}-src-grenade-dsvm-multinode{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: oslo.vmware
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - translation-jobs
+      - 'lib-forward-testing-{name}'
+      - 'stable-compat-jobs-{name}'
+      - 'gate-{name}-tox-{envlist}':
+          envlist: bandit
+
+- project:
+    name: oslosphinx
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: oslotest
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: osops-tools-generic
+    node: bare-trusty
+
+    jobs:
+      - gate-{name}-bashate
+
+- project:
+    name: osprofiler
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - 'lib-forward-testing-{name}'
+
+- project:
+    name: ospurge
+    node: bare-trusty
+
+    jobs:
+      - gate-{name}-pep8
+      - gate-{name}-python27
+
+- project:
+    name: ossa
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    docroot: security
+
+    jobs:
+      - 'gate-{name}-docs'
+      - 'static-{name}-publish'
+
+- project:
+    name: packetary
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    jobs:
+      - pypi-jobs
+      - python-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: packstack
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: pandaman
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: pbr
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - openstack-publish-jobs
+      - python-jobs
+      - pypi-jobs
+      - 'lib-forward-testing-{name}'
+
+- project:
+    name: performance-docs
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+    tarball-site: tarballs.openstack.org
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: poppy
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: project-config
+    node: bare-trusty
+
+    jobs:
+      - gate-{name}-linters
+      - generate-specs-site-jobs
+      - gate-bindep-fallback-{node}:
+          node:
+            - ubuntu-trusty
+
+- project:
+    name: project-config-example
+    node: bare-trusty
+
+    jobs:
+      - gate-{name}-linters
+
+- project:
+    name: project-team-guide
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - 'gate-{name}-docs'
+
+- project:
+    name: proliantutils
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: puppet-accessbot
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-ansible
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-aodh
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-apparmor
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-apps_site
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-askbot
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-asterisk
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-autossh
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+
+- project:
+    name: puppet-bandersnatch
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-barbican
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-bugdaystats
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-bup
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-ceilometer
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-ceph
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-cgit
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-cinder
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-ciwatch
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-designate
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-diskimage_builder
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-drupal
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-ec2api
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+
+- project:
+    name: puppet-elastic_recheck
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-elasticsearch
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-etherpad_lite
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-exim
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-gerrit
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-gerritbot
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-github
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-glance
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-gnocchi
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-grafyaml
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-graphite
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-haveged
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-heat
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-horizon
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-hound
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-httpd
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - '{name}-forge-upload'
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-infracloud
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-iptables
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-ironic
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-jeepyb
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-jenkins
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-kerberos
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-keystone
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - openstack-releasenotes-jobs
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-kibana
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-lodgeit
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-log_processor
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-logrotate
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-logstash
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-magnum
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-mailman
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-manila
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-mediawiki
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-meetbot
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-midonet
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-mistral
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-monasca
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+
+- project:
+    name: puppet-murano
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-mysql_backup
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-n1k-vsm
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+
+- project:
+    name: puppet-neutron
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-nodepool
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-nova
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-odsreg
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-openafs
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-openstack_extras
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-openstack_health
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-openstack-integration
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-openstack-integration-jobs
+      - 'gate-puppet-openstack-integration-dsvm-multinode{job-suffix}':
+          node: devstack-trusty-2-node
+          job-suffix: '-nv'
+
+- project:
+    name: puppet-openstack_spec_helper
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-openstack-spec-helper-jobs
+
+- project:
+    name: puppet-openstack-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: puppet-openstackci
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    doc-publisher-folder: openstackci
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+      - 'gate-openstackci-beaker-{ostype}-dsvm':
+          ostype: centos7
+      - 'gate-openstackci-beaker-{ostype}-dsvm':
+          ostype: trusty
+      - gate-{name}-docs
+      - infra-publish-jobs
+
+- project:
+    name: puppet-openstackid
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-openstacklib
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-os_client_config
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-oslo
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-packagekit
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-pgsql_backup
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-phabricator
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-pip
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-planet
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-project_config
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-puppet
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-rally
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-redis
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-refstack
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-releasestatus
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-reviewday
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-sahara
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-setproxy
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+
+- project:
+    name: puppet-simpleproxy
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-snmpd
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-ssh
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-ssl_cert_check
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-stackalytics
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-statusbot
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-storyboard
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - '{name}-forge-upload'
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-subunit2sql
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-sudoers
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-swift
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-tempest
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-tmpreaper
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-tripleo
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+
+- project:
+    name: puppet-trove
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-ulimit
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-unattended_upgrades
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-unbound
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-user
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-vinz
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-vitrage
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-vswitch
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-yum
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-zanata
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: puppet-zaqar
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-module-unit
+      - puppet-beaker-jobs:
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: puppet-zuul
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - puppet-beaker-jobs:
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: pycadf
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - 'lib-forward-testing-{name}'
+
+- project:
+    name: pyghmi
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: pylockfile
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: pymod2pkg
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: pypi-mirror
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - gate-{name}-pep8
+      - '{name}-tarball'
+      - pypi-jobs
+
+- project:
+    name: python-aodhclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: python-barbicanclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - 'lib-forward-testing-{name}'
+
+- project:
+    name: python-blazarclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: python-brick-cinderclient-ext
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - openstack-publish-jobs
+      - pypi-jobs
+      - python-jobs
+
+- project:
+    name: python-ceilometerclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - '{pipeline}-tempest-dsvm-neutron-src-{name}{job-suffix}-plugin':
+          project-repo: ceilometer
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-ceilometerclient-dsvm-functional{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - 'gate-telemetry-dsvm-integration-{name}'
+
+- project:
+    name: python-cerberusclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: python-cinderclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - openstack-releasenotes-jobs
+      - 'lib-forward-testing-{name}'
+      - '{pipeline}-cinderclient-dsvm-functional{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: python-cloudkittyclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: python-cloudpulseclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: python-cognitiveclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: python-congressclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: python-cueclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: python-designateclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: python-dracclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: python-evoqueclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: python-fuelclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - pypi-jobs
+      - python-jobs
+
+- project:
+    name: python-ganttclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - 'lib-forward-testing-{name}'
+      - '{pipeline}-glanceclient-dsvm-functional{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: python-glanceclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - 'lib-forward-testing-{name}'
+
+- project:
+    name: python-gnocchiclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: python-group-based-policy-client
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: python-heatclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - translation-jobs
+      - 'lib-forward-testing-{name}'
+      - '{pipeline}-heatclient-dsvm-functional{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: python-ironic-inspector-client
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - openstack-releasenotes-jobs
+      - gate-{name}-tox-{envlist}:
+          envlist: func
+      - '{pipeline}-python-ironic-inspector-client-dsvm{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: python-ironicclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - openstack-releasenotes-jobs
+      - 'lib-forward-testing-{name}'
+      - '{pipeline}-ironicclient-dsvm-functional{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-python-ironicclient-src{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: python-jenkins
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: python-keystoneclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - translation-jobs
+      - openstack-releasenotes-jobs
+      - 'lib-forward-testing-{name}'
+      - '{pipeline}-keystoneclient-dsvm-functional{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - 'gate-{name}-tox-{envlist}':
+          envlist: bandit
+
+- project:
+    name: python-keystoneclient-kerberos
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: python-kiteclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: python-magnumclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - translation-jobs
+      - 'gate-{name}-tox-{envlist}':
+          envlist: bandit
+
+- project:
+    name: python-manilaclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - 'lib-forward-testing-{name}'
+
+- project:
+    name: python-mistralclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - '{pipeline}-{component}-devstack-dsvm':
+          pipeline: gate
+          node: devstack-trusty
+          component: python-mistralclient
+
+- project:
+    name: python-monascaclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: python-muranoclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - '{pipeline}-muranoclient-dsvm-functional{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - openstack-releasenotes-jobs
+      - translation-jobs
+
+- project:
+    name: python-neutron-pd-driver
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: python-neutronclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - openstack-releasenotes-jobs
+      - pypi-jobs
+      - translation-jobs
+      - 'lib-forward-testing-{name}'
+      - '{pipeline}-neutronclient-test-dsvm-{which-test}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          which-test: functional
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-neutronclient-test-dsvm-{which-test}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          which-test: functional-adv-svcs
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: python-novaclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - translation-jobs
+      - openstack-releasenotes-jobs
+      - 'lib-forward-testing-{name}'
+      - '{pipeline}-novaclient-dsvm-functional{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: python-oneviewclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: python-openstackclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - translation-jobs
+      - '{pipeline}-osc-dsvm-functional{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - openstack-publish-jobs
+      - openstack-releasenotes-jobs
+      - pypi-jobs
+      - 'lib-forward-testing-{name}'
+
+- project:
+    name: python-openstacksdk
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - '{pipeline}-sdk-dsvm-functional{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - pypi-jobs
+
+- project:
+    name: python-opentsdbclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: python-rackclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: python-saharaclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - openstack-publish-jobs
+      - openstack-releasenotes-jobs
+      - '{pipeline}-tempest-dsvm-neutron-src-python-saharaclient{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-saharaclient-dsvm-functional{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: python-scciclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: python-searchlightclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: python-senlinclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: python-solumclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: python-sticksclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: python-storyboardclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: python-surveilclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: python-swiftclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - '{pipeline}-swiftclient-dsvm-functional{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - 'lib-forward-testing-{name}'
+
+- project:
+    name: python-tackerclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: python-tripleoclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: python-troveclient
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    node: bare-trusty
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - '{pipeline}-tempest-dsvm-neutron-src-python-troveclient{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: python-vitrageclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: python-watcherclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: python-zaqarclient
+    tarball-site: tarballs.openstack.org
+    node: bare-trusty
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - '{pipeline}-zaqarclient-dsvm-functional{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - 'lib-forward-testing-{name}'
+
+- project:
+    name: qa-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: rack
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: rally
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - openstack-publish-jobs
+      - gate-rally-install-{node}:
+          node: bare-precise
+      - gate-rally-install-{node}:
+          node: devstack-centos7
+      - gate-rally-dsvm-verify-{mode}:
+          mode: light
+          compare: 1
+          ceilometer: 0
+          heat: 0
+          neutron: 0
+          sahara: 0
+      - gate-rally-dsvm-verify-{mode}:
+          mode: full
+          compare: 0
+          ceilometer: 0
+          heat: 1
+          neutron: 1
+          sahara: 1
+      - gate-{name}-tox-{envlist}:
+          envlist: self
+      - gate-rally-dsvm-neutron-{name}:
+          name: unstable
+      - gate-rally-dsvm-rally-{service}:
+          service: cinder
+          neutron: 0
+      - gate-rally-dsvm-rally-{service}:
+          service: heat
+          neutron: 1
+      - gate-rally-dsvm-rally-{service}:
+          neutron: 0
+          service: nova
+      - gate-rally-dsvm-{name}
+      - gate-rally-dsvm-designate-{name}
+      - gate-rally-dsvm-ironic-{name}
+      - gate-rally-dsvm-monasca-{name}
+      - gate-rally-dsvm-murano-{name}
+      - gate-rally-dsvm-mistral-{name}
+      - gate-rally-dsvm-neutron-{name}
+      - gate-rally-dsvm-zaqar-{name}
+
+- project:
+    name: refstack
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - javascript-jobs
+
+- project:
+    name: refstack-client
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: release-tools
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - gate-{name}-bashate
+
+- project:
+    name: releases
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - 'gate-{name}-docs'
+      - 'gate-{name}-tox-{envlist}':
+          envlist: validate
+      - 'gate-{name}-tox-{envlist}':
+          envlist: list-changes
+      - gate-{name}-pep8
+      - publish-release-history
+
+- project:
+    name: renderspec
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: reno
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: requests-mock
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - hook-{name}-rtfd
+      - gate-{name}-tox-{envlist}:
+          envlist: keystoneclient-tip
+      - gate-{name}-tox-{envlist}:
+          envlist: novaclient-tip
+
+- project:
+    name: requestsexceptions
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    doc-publisher-folder: requestsexceptions
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - infra-publish-jobs
+
+- project:
+    name: requirements
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - gate-{name}-docs
+      - gate-{name}-pep8
+      - gate-{name}-python27
+      - gate-{name}-pypy
+      - openstack-publish-jobs
+      - propose-requirements-constraints{job-suffix}:
+          job-suffix: '-master'
+          branch-override: master
+      - propose-requirements-constraints{job-suffix}:
+          job-suffix: '-liberty'
+          branch-override: stable/liberty
+      - 'gate-{name}-tox-{envlist}':
+          envlist: validate
+
+- project:
+    name: requirements-jobs
+
+    jobs:
+      - '{pipeline}-requirements-integration-dsvm{variant}':
+          pipeline: gate
+          node: devstack-trusty
+          variant: ''
+      - '{pipeline}-requirements-integration-dsvm{variant}':
+          pipeline: gate
+          node: devstack-trusty
+          variant: '-resolver'
+      - '{pipeline}-pbr-installation-dsvm{variant}':
+          pipeline: gate
+          node: devstack-trusty
+          variant: ''
+      - '{pipeline}-pbr-installation-dsvm{variant}':
+          pipeline: gate
+          node: devstack-trusty
+          variant: '-upstream'
+      - '{pipeline}-pbr-installation-dsvm{variant}':
+          pipeline: periodic
+          node: devstack-trusty
+          variant: '-upstream'
+
+- project:
+    name: reviewday
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: reviewstats
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: rpm-packaging
+    node: bare-trusty
+
+    jobs:
+      - 'gate-{name}-tox-{envlist}':
+          envlist: lint
+
+- project:
+    name: sahara
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - python-kilo-bitrot-jobs
+      - python-liberty-bitrot-jobs
+      - gate-{name}-pylint
+      - pypi-jobs
+      - translation-jobs
+      - openstack-publish-jobs
+      - openstack-releasenotes-jobs
+      - gate-{name}-tox-{envlist}:
+          envlist: bandit
+      - '{pipeline}-tempest-dsvm-sahara{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-{name}-dsvm-scenario-{network}-{engine}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          network: neutron
+          engine: heat
+      - '{pipeline}-{name}-dsvm-scenario-{network}-{engine}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          network: nova
+          engine: heat
+      - '{pipeline}-{name}-dsvm-scenario-{network}-{engine}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+          network: neutron
+          engine: heat
+      - '{pipeline}-{name}-dsvm-scenario-{network}-{engine}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+          network: nova
+          engine: heat
+      - '{pipeline}-{name}-dsvm-scenario-{network}-{engine}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+          network: neutron
+          engine: direct
+      - '{pipeline}-{name}-dsvm-scenario-{network}-{engine}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+          network: nova
+          engine: direct
+
+- project:
+    name: sahara-ci-config
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - gate-{name}-pep8
+
+- project:
+    name: sahara-dashboard
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: sahara-extra
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: sahara-image-elements
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - 'gate-sahara-buildimages-{plugin}':
+          plugin: vanilla
+      - 'gate-sahara-buildimages-{plugin}':
+          plugin: hdp
+      - 'gate-sahara-buildimages-{plugin}':
+          plugin: cloudera
+      - 'gate-sahara-buildimages-{plugin}':
+          plugin: spark
+      - 'gate-sahara-buildimages-{plugin}':
+          plugin: storm
+      - 'gate-sahara-buildimages-{plugin}':
+          plugin: mapr
+      - 'gate-sahara-buildimages-{plugin}':
+          plugin: ambari
+      - 'gate-sahara-buildimages-{plugin}':
+          plugin: plain
+
+- project:
+    name: sahara-scenario
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - '{pipeline}-{name}-dsvm-scenario-{network}-{engine}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+          network: neutron
+          engine: heat
+      - '{pipeline}-{name}-dsvm-scenario-{network}-{engine}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+          network: nova
+          engine: heat
+
+- project:
+    name: sahara-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: scalpels
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - '{pipeline}-scalpels-dsvm-neutron{job-suffix}-{ostype}':
+          ostype: 'devstack-trusty'
+          pipeline: gate
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-scalpels-dsvm-neutron{job-suffix}-{ostype}':
+          ostype: 'fedora-23'
+          pipeline: gate
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: searchlight
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - openstack-releasenotes-jobs
+      - pypi-jobs
+      - translation-jobs
+
+- project:
+    name: searchlight-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: security-doc
+    node: bare-trusty
+
+    jobs:
+      - openstack-doc-jobs
+      - manual-translation-jobs
+
+- project:
+    name: security-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: senlin
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - '{pipeline}-senlin-dsvm-functional{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - pypi-jobs
+      - openstack-publish-jobs
+      - openstack-releasenotes-jobs
+
+- project:
+    name: senlin-dashboard
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: shade
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    doc-publisher-folder: shade
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - infra-publish-jobs
+      - '{pipeline}-shade-dsvm-functional-keystone2{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-shade-dsvm-functional-neutron{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-shade-dsvm-functional-nova{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-shade-dsvm-ansible{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: shaker
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: shotgun
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: shovel
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - javascript-jobs
+      - publish-to-npm
+
+- project:
+    name: smaug
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: solar
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: solum
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: solum-dashboard
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: solum-infra-guestagent
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: solum-specs
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: spanner
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: sqlalchemy-migrate
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - gate-{name}-tox-{envlist}:
+          envlist: py27sa07
+      - '{pipeline}-sqlalchemy-migrate-devstack-dsvm{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - hook-{name}-rtfd
+      - pypi-jobs
+
+- project:
+    name: stackalytics
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: stacktach
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: stacktach-klugman
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: stacktach-notification-utils
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: stacktach-quince
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: stacktach-quincy
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: stacktach-shoebox
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: stacktach-simport
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: stacktach-stackdistiller
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: stacktach-timex
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: stacktach-winchester
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: stackviz
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: statusbot
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: steth
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: stevedore
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - 'lib-forward-testing-{name}'
+      - openstack-publish-jobs
+
+- project:
+    name: sticks
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: sticks-dashboard
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: storlets
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - hook-{name}-rtfd
+      - python-jobs
+
+- project:
+    name: storyboard
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    doc-publisher-folder: storyboard
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - gate-storyboard-js-integration
+      - infra-publish-jobs
+
+- project:
+    name: storyboard-webclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - 'gate-{name}-npm-run-{command}':
+          command: 'lint'
+      - 'gate-{name}-npm-run-{command}':
+          command: 'test-unit'
+      - 'gate-{name}-npm-run-{command}':
+          command: 'test-functional'
+      - 'gate-{name}-npm-run-{command}':
+          command: 'test-integration'
+      - gate-{name}-js-draft
+      - '{name}-js-release-{job-suffix}':
+          job-suffix: 'master'
+      - '{name}-js-release-{job-suffix}':
+          job-suffix: 'branch'
+      - gate-storyboard-js-integration
+
+- project:
+    name: subunit2sql
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - openstack-publish-jobs
+      - openstack-releasenotes-jobs
+
+- project:
+    name: surveil
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: swauth
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - hook-{name}-rtfd
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: swift
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - translation-jobs
+      - 'gate-{name}-tox-{envlist}':
+          envlist: func
+      - '{pipeline}-swift-dsvm-functional{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-swift-dsvm-functional{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+# No one is interested in stable/ branches on swift, so don't run bitrot jobs
+
+- project:
+    name: swift-bench
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: swift-ceph-backend
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: swift-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: swift3
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - gate-{name}-pylint
+      - gate-{name}-tox-{envlist}:
+          envlist: tempauth
+      - gate-{name}-tox-{envlist}:
+          envlist: keystone
+      - gate-{name}-tox-{envlist}:
+          envlist: s3acl
+
+- project:
+    name: swiftonfile
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: syntribos
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: system-config
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+    doc-publisher-folder: system-config
+
+    jobs:
+      - puppet-check-jobs:
+      - gate-{name}-linters
+      - gate-infra-puppet-apply-{ostype}:
+          ostype:
+            - bare-precise
+            - bare-trusty
+            - fedora-23
+      - gate-infra-puppet-apply-dsvm-{ostype}:
+          ostype:
+            - centos7
+      - infra-publish-jobs
+      - 'gate-{name}-docs'
+
+- project:
+    name: tacker
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - hook-{name}-rtfd
+      - '{pipeline}-tacker-dsvm-functional{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: tacker-horizon
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: tacker-specs
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - gate-{name}-python27
+      - gate-{name}-docs
+
+- project:
+    name: tap-as-a-service
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - '{pipeline}-tempest-dsvm-tap-as-a-service{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- project:
+    name: taskflow
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - 'lib-forward-testing-{name}'
+
+- project:
+    name: telcowg-usecases
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: tempest
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+
+- project:
+    name: tempest-lib
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - 'lib-forward-testing-{name}'
+
+- project:
+    name: tooz
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+      - gate-{name}-tox-{envlist}:
+          envlist:
+            - py27-etcd
+            - py34-etcd
+            - py27-zookeeper
+            - py34-zookeeper
+            - py27-redis
+            - py34-redis
+            - py27-sentinel
+            - py34-sentinel
+            - py27-memcached
+            - py34-memcached
+            - py27-postgresql
+            - py34-postgresql
+            - py27-mysql
+            - py34-mysql
+            - py27-consul
+            - py34-consul
+      - 'lib-forward-testing-{name}'
+
+- project:
+    name: tosca-parser
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - pypi-jobs
+
+- project:
+    name: training-guides
+    node: bare-trusty
+
+    jobs:
+      - openstack-doc-jobs
+      - translation-jobs
+
+- project:
+    name: training-labs
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: transparency-policy
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    docroot: transparency-policy
+
+    jobs:
+      - 'gate-{name}-docs'
+      - 'static-{name}-publish'
+
+- project:
+    name: tricircle
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: tripleo-common
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: tripleo-docs
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - gate-{name}-docs
+      - openstack-publish-jobs
+
+- project:
+    name: tripleo-heat-templates
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - puppet-check-jobs
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: tripleo-image-elements
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: tripleo-incubator
+    node: bare-trusty
+    doc-publisher-site: docs.openstack.org
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - gate-{name}-docs
+      - openstack-publish-jobs
+
+- project:
+    name: tripleo-puppet-elements
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: tripleo-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: trove
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    node: bare-trusty
+
+    jobs:
+      - python-jobs
+      - python-kilo-bitrot-jobs
+      - python-liberty-bitrot-jobs
+      - openstack-publish-jobs
+      - translation-jobs
+      - openstack-releasenotes-jobs
+      - openstack-doc-jobs
+      - 'gate-trove-functional-dsvm-{datastore}{job-suffix}':
+          datastore: 'mysql'
+          job-suffix: ''
+          branch-override: default
+      - 'gate-trove-functional-dsvm-{datastore}{job-suffix}':
+          datastore: 'percona'
+          job-suffix: ''
+          branch-override: default
+      - 'gate-trove-functional-dsvm-{datastore}{job-suffix}':
+          datastore: 'mongodb'
+          job-suffix: ''
+          branch-override: default
+      - 'gate-trove-functional-dsvm-{datastore}{job-suffix}':
+          datastore: 'mysql'
+          job-suffix: '-kilo'
+          branch-override: stable/kilo
+      - 'gate-trove-buildimage-{datastore}':
+          datastore: 'mysql'
+      - 'gate-trove-buildimage-{datastore}':
+          datastore: 'percona'
+      - 'gate-trove-buildimage-{datastore}':
+          datastore: 'mongodb'
+
+- project:
+    name: trove-dashboard
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - translation-jobs
+
+- project:
+    name: trove-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: turbo-hipster
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: vinz
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    doc-publisher-folder: vinz
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - infra-publish-jobs
+
+- project:
+    name: vinz-webclient
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - gate-{name}-js-draft
+      - '{name}-js-release-{job-suffix}':
+          job-suffix: 'master'
+      - '{name}-js-release-{job-suffix}':
+          job-suffix: 'branch'
+
+- project:
+    name: vitrage
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: vitrage-dashboard
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+
+- project:
+    name: vitrage-specs
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: vmtp
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - hook-{name}-rtfd
+
+- project:
+    name: vmware-nsx
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - translation-jobs
+
+- project:
+    name: watcher
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - '{pipeline}-watcher-dsvm{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-nv'
+          branch-override: default
+
+- project:
+    name: watcher-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: wsme
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-angular
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-angular-bootstrap
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-angular-cookies
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-angular-fileupload
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-angular-gettext
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-angular-lrdragndrop
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-angular-mock
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-angular-sanitize
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-angular-smart-table
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-bootstrap-datepicker
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-bootstrap-scss
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-bootswatch
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-d3
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-font-awesome
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-hogan
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-jasmine
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-jquery-migrate
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-jquery.bootstrap.wizard
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-jquery.quicksearch
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-jquery.tablesorter
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-jsencrypt
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-magic-search
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-mdi
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-qunit
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-rickshaw
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-roboto-fontface
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: xstatic-spin
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: yaml2ical
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: yaql
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+
+- project:
+    name: zaqar
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    node: bare-trusty
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - translation-jobs
+      - translation-jobs-liberty
+      - openstack-releasenotes-jobs
+      - 'gate-{name}-tox-{envlist}':
+          envlist: integration
+      - gate-rally-dsvm-zaqar-{name}
+      - '{pipeline}-dsvm-{backend}-zaqar{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          backend: mongodb
+      - '{pipeline}-dsvm-{backend}-zaqar{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+          backend: redis
+
+- project:
+    name: zaqar-specs
+    node: bare-trusty
+
+    jobs:
+      - specs-jobs
+
+- project:
+    name: zaqar-ui
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+
+    jobs:
+      - python-jobs
+      - openstack-publish-jobs
+      - translation-jobs
+
+- project:
+    name: zmq-event-publisher
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+
+    jobs:
+      - jenkins-plugin-jobs
+
+- project:
+    name: zuul
+    node: bare-trusty
+    tarball-site: tarballs.openstack.org
+    doc-publisher-site: docs.openstack.org
+    doc-publisher-folder: zuul
+
+    jobs:
+      - python-jobs
+      - pypi-jobs
+      - infra-publish-jobs

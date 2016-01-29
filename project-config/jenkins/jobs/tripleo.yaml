@@ -1,0 +1,69 @@
+- job-template:
+    name: '{trigger}-tripleo-ci-{jobname}'
+    node: '{node}'
+
+    wrappers:
+      - build-timeout:
+          timeout: 175
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export TOCI_JOBTYPE={type}
+
+          # ZUUL Doesn't set these for periodic jobs
+          export ZUUL_BRANCH=${{ZUUL_BRANCH:-master}}
+          export ZUUL_REF=${{ZUUL_REF:-None}}
+
+          export BRANCH_OVERRIDE={branch-override}
+          if [ "$BRANCH_OVERRIDE" != "default" ] ; then
+              export OVERRIDE_ZUUL_BRANCH=$BRANCH_OVERRIDE
+          fi
+
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=170
+          export DEVSTACK_GATE_TEMPEST=0
+          export DEVSTACK_GATE_EXERCISES=0
+
+          export PROJECTS="openstack/instack $PROJECTS"
+          export PROJECTS="openstack/instack-undercloud $PROJECTS"
+          export PROJECTS="openstack/puppet-aodh $PROJECTS"
+          export PROJECTS="openstack/puppet-ceilometer $PROJECTS"
+          export PROJECTS="openstack/puppet-ceph $PROJECTS"
+          export PROJECTS="openstack/puppet-cinder $PROJECTS"
+          export PROJECTS="openstack/puppet-glance $PROJECTS"
+          export PROJECTS="openstack/puppet-gnocchi $PROJECTS"
+          export PROJECTS="openstack/puppet-heat $PROJECTS"
+          export PROJECTS="openstack/puppet-horizon $PROJECTS"
+          export PROJECTS="openstack/puppet-ironic $PROJECTS"
+          export PROJECTS="openstack/puppet-keystone $PROJECTS"
+          export PROJECTS="openstack/puppet-mistral $PROJECTS"
+          export PROJECTS="openstack/puppet-neutron $PROJECTS"
+          export PROJECTS="openstack/puppet-nova $PROJECTS"
+          export PROJECTS="openstack/puppet-openstack_extras $PROJECTS"
+          export PROJECTS="openstack/puppet-openstacklib $PROJECTS"
+          export PROJECTS="openstack/puppet-sahara $PROJECTS"
+          export PROJECTS="openstack/puppet-swift $PROJECTS"
+          export PROJECTS="openstack/puppet-tripleo $PROJECTS"
+          export PROJECTS="openstack/puppet-vswitch $PROJECTS"
+          export PROJECTS="openstack/python-ironic-inspector-client $PROJECTS"
+          export PROJECTS="openstack/python-tripleoclient $PROJECTS"
+          export PROJECTS="openstack/tripleo-common $PROJECTS"
+          export PROJECTS="openstack/tripleo-puppet-elements $PROJECTS"
+
+          sudo chown -hR $(whoami) /opt/git
+          function gate_hook {{
+              bash -xe /opt/stack/new/tripleo-ci/toci_gate_test.sh
+          }}
+          export -f gate_hook
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - devstack-logs
+      - console-log
+

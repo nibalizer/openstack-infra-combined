@@ -1,0 +1,47 @@
+- job-template:
+    name: '{pipeline}-neutron-{lbaasversion}-dsvm-{lbaastest}{job-suffix}'
+    node: '{node}'
+
+    wrappers:
+      - build-timeout:
+          timeout: 125
+      - timestamps
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=120
+          export DEVSTACK_GATE_TEMPEST=1
+          export DEVSTACK_GATE_TEMPEST_NOTESTS=1
+          export DEVSTACK_GATE_EXERCISES=0
+          export DEVSTACK_GATE_NEUTRON=1
+          export DEVSTACK_GATE_INSTALL_TESTONLY=1
+          export BRANCH_OVERRIDE={branch-override}
+          if [ "$BRANCH_OVERRIDE" != "default" ] ; then
+              export OVERRIDE_ZUUL_BRANCH=$BRANCH_OVERRIDE
+          fi
+          export PROJECTS="openstack/barbican $PROJECTS"
+          export PROJECTS="openstack/python-barbicanclient $PROJECTS"
+
+          function gate_hook {{
+              $BASE/new/neutron-lbaas/neutron_lbaas/tests/contrib/gate_hook.sh {lbaasversion} {lbaastest}
+          }}
+          export -f gate_hook
+
+          function post_test_hook {{
+              $BASE/new/neutron-lbaas/neutron_lbaas/tests/contrib/post_test_hook.sh {lbaasversion} {lbaastest}
+          }}
+          export -f post_test_hook
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - devstack-logs
+      - console-log

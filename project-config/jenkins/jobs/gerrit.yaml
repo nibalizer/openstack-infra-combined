@@ -1,0 +1,63 @@
+- job:
+    name: gate-gerrit-buck
+    node: bare-trusty
+
+    wrappers:
+      - build-timeout:
+          timeout: 40
+      - timestamps
+
+    builders:
+      - revoke-sudo
+      - install-buck
+      - shell: |
+          #!/bin/bash -xe
+          export PATH=`pwd`/buck/bin:$PATH
+          mkdir -p gerrit
+          cd gerrit
+          /usr/local/jenkins/slave_scripts/gerrit-git-prep.sh https://review.openstack.org git://git.openstack.org
+          /usr/local/jenkins/slave_scripts/version-properties.sh
+          source version.properties
+          buck clean
+          buck test --all --exclude slow
+          buck build release
+          cp buck-out/gen/release.war buck-out/gen/gerrit-$PROJECT_VER.war
+
+    publishers:
+      - war:
+          site: 'tarballs.openstack.org'
+          warfile: 'gerrit/buck-out/gen/gerrit-*.war'
+          target: 'tarballs/ci/test'
+      - console-log
+
+
+- job:
+    name: gerrit-package-buck
+    node: bare-trusty
+
+    wrappers:
+      - build-timeout:
+          timeout: 40
+      - timestamps
+
+    builders:
+      - revoke-sudo
+      - install-buck
+      - shell: |
+          #!/bin/bash -xe
+          export PATH=`pwd`/buck/bin:$PATH
+          mkdir -p gerrit
+          cd gerrit
+          /usr/local/jenkins/slave_scripts/gerrit-git-prep.sh https://review.openstack.org git://git.openstack.org
+          /usr/local/jenkins/slave_scripts/version-properties.sh
+          source version.properties
+          buck clean
+          buck build release
+          cp buck-out/gen/release.war buck-out/gen/gerrit-$PROJECT_VER.war
+
+    publishers:
+      - war:
+          site: 'tarballs.openstack.org'
+          warfile: 'gerrit/buck-out/gen/gerrit-*.war'
+          target: 'tarballs/ci/gerrit'
+      - console-log

@@ -1,0 +1,22 @@
+- job-group:
+    name: 'lib-forward-testing-{name}'
+    jobs:
+      - '{pipeline}-tempest-dsvm-neutron-src-{name}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+      - '{pipeline}-tempest-dsvm-test-accounts-src-{name}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: ''
+          branch-override: default
+
+- job-group:
+    name: 'stable-compat-jobs-{name}'
+    jobs:
+      - '{pipeline}-tempest-dsvm-neutron-src-{name}{job-suffix}':
+          pipeline: gate
+          node: devstack-trusty
+          job-suffix: '-liberty'
+          branch-override: stable/liberty

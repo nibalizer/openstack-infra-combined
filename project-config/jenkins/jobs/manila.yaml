@@ -1,0 +1,395 @@
+- job-template:
+    name: 'gate-manila-tempest-dsvm-{description}'
+    node: devstack-trusty
+
+    wrappers:
+      - build-timeout:
+          timeout: 75
+      - timestamps
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=70
+          export DEVSTACK_GATE_NEUTRON=1
+          export DEVSTACK_GATE_POSTGRES={postgres_enabled}
+          export PROJECTS="openstack/python-manilaclient $PROJECTS"
+          export ENABLED_SERVICES=tempest
+
+          # Enable manila devstack plugin. Provided repo should be
+          # cloned by zuul before devstack run and below provided
+          # link should not be used.
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin manila git://git.openstack.org/openstack/manila"
+
+          # Keep localrc to be able to set some vars in pre_test_hook
+          export KEEP_LOCALRC=1
+
+          function pre_test_hook {{
+              # 'dhss' - acronym for 'Driver Handles Share Servers',
+              # defines mode of a share driver. Boolean-like.
+              # 'driver' - codename of a share driver to configure.
+              # 'back_end_type' - defines which installation Manila should
+              # have - either 'singlebackend' or 'multibackend'.
+              source $BASE/new/manila/contrib/ci/pre_test_hook.sh \
+                  {dhss} \
+                  {driver} \
+                  {back_end_type}
+          }}
+          export -f pre_test_hook
+
+          function post_test_hook {{
+              # 'back_end_type' - defines which installation Manila is
+              # configured to - either 'singlebackend' or 'multibackend'.
+              # 'driver' - codename of a share driver that is configured in
+              # Manila. It is used for enabling/disabling tests that are not
+              # supported by share driver that is used.
+              # 'test_type' - defines which set of test suites should be used,
+              # can have 'api' and 'scenario' values.
+              # 'postgres_enabled' - set of test suites depends on DB backend
+              # in some cases, so it is provided explicitely. Boolean-like.
+              source $BASE/new/manila/contrib/ci/post_test_hook.sh \
+                  {back_end_type} \
+                  {driver} \
+                  {test_type} \
+                  {postgres_enabled}
+          }}
+          export -f post_test_hook
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - devstack-logs
+      - console-log
+
+- job:
+    name: gate-manilaclient-dsvm-neutron-functional
+    node: devstack-trusty
+
+    wrappers:
+      - build-timeout:
+          timeout: 75
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=70
+          export DEVSTACK_GATE_NEUTRON=1
+          export PROJECTS="openstack/python-manilaclient $PROJECTS"
+
+          # Enable manila devstack plugin. Provided repo should be
+          # cloned by zuul before devstack run and below provided link
+          # should not be used.
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin manila git://git.openstack.org/openstack/manila"
+
+          # Keep localrc to be able to set some vars in pre_test_hook
+          export KEEP_LOCALRC=1
+
+          function pre_test_hook {
+              source $BASE/new/python-manilaclient/contrib/ci/pre_test_hook.sh
+          }
+          export -f pre_test_hook
+
+          function post_test_hook {
+              # Configure and run functional tests
+              source $BASE/new/python-manilaclient/contrib/ci/post_test_hook.sh
+          }
+          export -f post_test_hook
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - test-results
+      - devstack-logs
+      - console-log
+
+
+- job-template:
+    name: 'gate-manila-publishimage-{image-name}'
+    node: devstack-trusty
+
+    builders:
+      - link-logs
+      - net-info
+      - gerrit-git-prep
+      - shell: |
+          #!/bin/bash -xe
+          ./tools/gate/build-images {image-name}
+
+    publishers:
+      - scp:
+          site: 'tarballs.openstack.org'
+          files:
+            - source: 'images/*'
+              target: 'tarballs/manila-image-elements/images/'
+              keep-hierarchy: false
+              copy-after-failure: false
+      - console-log
+
+- job-template:
+    name: 'gate-manila-buildimage-{image-name}'
+    node: devstack-trusty
+
+    builders:
+      - link-logs
+      - net-info
+      - gerrit-git-prep
+      - shell: |
+          #!/bin/bash -xe
+          ./tools/gate/build-images {image-name}
+
+    publishers:
+      - console-log
+
+- job:
+    name: gate-manila-tempest-dsvm-glusterfs
+    node: devstack-trusty
+
+    wrappers:
+      - build-timeout:
+          timeout: 75
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=70
+          export DEVSTACK_GATE_NEUTRON=1
+          export ENABLED_SERVICES=tempest
+          export PROJECTS="openstack/python-manilaclient openstack/devstack-plugin-glusterfs $PROJECTS"
+
+          # Enable manila devstack plugin. Provided repo should be
+          # cloned by zuul before devstack run and below provided link
+          # should not be used.
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin manila git://git.openstack.org/openstack/manila"
+
+          # Enable devstack-plugin-glusterfs plugin, to install and configure GlusterFS.
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin devstack-plugin-glusterfs git://git.openstack.org/stackforge/devstack-plugin-glusterfs"
+
+          # Configure devstack-plugin-glusterfs to enable GlusterFS as a backend for Manila.
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"CONFIGURE_GLUSTERFS_MANILA=True"
+
+          # Configure devstack-plugin-glusterfs to use glusterfs driver.
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"GLUSTERFS_MANILA_DRIVER_TYPE=glusterfs"
+
+          # Keep localrc to be able to set some vars in pre_test_hook
+          export KEEP_LOCALRC=1
+
+          function pre_test_hook {
+              # Configure devstack to run manila installation without handling of share servers
+              source $BASE/new/devstack-plugin-glusterfs/manila/pre_test_hook.sh
+          }
+          export -f pre_test_hook
+
+          function post_test_hook {
+              # Configure and run tempest on singlebackend manila installation
+              source $BASE/new/devstack-plugin-glusterfs/manila/post_test_hook.sh singlebackend
+          }
+          export -f post_test_hook
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - devstack-logs
+      - console-log
+
+
+- job:
+    name: gate-manila-tempest-dsvm-glusterfs-native
+    node: devstack-trusty
+
+    wrappers:
+      - build-timeout:
+          timeout: 75
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=70
+          export DEVSTACK_GATE_NEUTRON=1
+          export ENABLED_SERVICES=tempest
+          export PROJECTS="openstack/python-manilaclient openstack/devstack-plugin-glusterfs $PROJECTS"
+
+          # Enable manila devstack plugin. Provided repo should be
+          # cloned by zuul before devstack run and below provided link
+          # should not be used.
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin manila git://git.openstack.org/openstack/manila"
+
+          # Enable devstack-plugin-glusterfs plugin, to install and configure GlusterFS.
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin devstack-plugin-glusterfs git://git.openstack.org/stackforge/devstack-plugin-glusterfs"
+
+          # Configure devstack-plugin-glusterfs to enable GlusterFS as a backend for Manila.
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"CONFIGURE_GLUSTERFS_MANILA=True"
+
+          # Configure devstack-plugin-glusterfs to use glusterfs-native driver.
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"GLUSTERFS_MANILA_DRIVER_TYPE=glusterfs-native"
+
+          # Keep localrc to be able to set some vars in pre_test_hook
+          export KEEP_LOCALRC=1
+
+          function pre_test_hook {
+              # Configure devstack to run manila installation without handling of share servers
+              source $BASE/new/devstack-plugin-glusterfs/manila/pre_test_hook.sh
+          }
+          export -f pre_test_hook
+
+          function post_test_hook {
+              # Configure and run tempest on singlebackend manila installation
+              source $BASE/new/devstack-plugin-glusterfs/manila/post_test_hook.sh singlebackend
+          }
+          export -f post_test_hook
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - devstack-logs
+      - console-log
+
+
+- job:
+    name: gate-manila-tempest-dsvm-hdfs
+    node: devstack-trusty
+
+    wrappers:
+      - build-timeout:
+          timeout: 75
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=70
+          export DEVSTACK_GATE_NEUTRON=1
+          export ENABLED_SERVICES=tempest
+          export PROJECTS="openstack/python-manilaclient openstack/devstack-plugin-hdfs $PROJECTS"
+
+          # Enable manila devstack plugin. Provided repo should be cloned by zuul before devstack run
+          # and below provided link should not be used.
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin manila git://git.openstack.org/openstack/manila"
+
+          # Enable devstack-plugin-hdfs plugin, to install and configure HDFS.
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin devstack-plugin-hdfs git://git.openstack.org/openstack/devstack-plugin-hdfs"
+
+          # Keep localrc to be able to set some vars in pre_test_hook
+          export KEEP_LOCALRC=1
+
+          function pre_test_hook {
+              # Configure devstack to run manila installation without handling of share servers
+              source $BASE/new/devstack-plugin-hdfs/manila/pre_test_hook.sh
+          }
+          export -f pre_test_hook
+
+          function post_test_hook {
+              # Configure and run tempest on multi-backend manila installation
+              source $BASE/new/devstack-plugin-hdfs/manila/post_test_hook.sh
+          }
+          export -f post_test_hook
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - devstack-logs
+      - console-log
+
+- job:
+    name: gate-manila-tempest-dsvm-cephfs-native
+    node: devstack-trusty
+
+    wrappers:
+      - build-timeout:
+          timeout: 75
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=70
+          export DEVSTACK_GATE_NEUTRON=1
+          export ENABLED_SERVICES=tempest
+          export PROJECTS="openstack/python-manilaclient openstack/devstack-plugin-ceph $PROJECTS"
+
+          # Enable Manila's DevStack plugin. Provided repo should be
+          # cloned by zuul before devstack run and below provided link
+          # should not be used.
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin manila git://git.openstack.org/openstack/manila"
+
+          # Enable devstack-plugin-ceph plugin, to install and configure
+          # CephFS.
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin devstack-plugin-ceph git://git.openstack.org/openstack/devstack-plugin-ceph"
+
+
+          # Enable CephFS as the backend for Manila.
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"ENABLE_CEPH_MANILA=True"
+
+          # Disable Ceph as the storage backend for Nova.
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"ENABLE_CEPH_NOVA=False"
+
+          # Disable Ceph as the storage backend for Glance.
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"ENABLE_CEPH_GLANCE=False"
+
+          # Disable Ceph as the storage backend for Cinder.
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"ENABLE_CEPH_CINDER=False"
+
+          # Disable Ceph as the storage backend for Cinder backup.
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"ENABLE_CEPH_C_BAK=False"
+
+          # Keep localrc to be able to set some vars in pre_test_hook
+          export KEEP_LOCALRC=1
+
+          function pre_test_hook {
+              # Configure Manila with a CephFSNative driver backend.
+              # Refer job-template's pre_test_hook for more details on the
+              # arguments.
+              source $BASE/new/devstack-plugin-ceph/manila/pre_test_hook.sh \
+                  false cephfsnative singlebackend
+          }
+          export -f pre_test_hook
+
+          function post_test_hook {
+              # Configure and run Tempest API tests on Manila with a
+              # CephFSNative driver backend.
+              # Refer job-template's post_test_hook for more details on the
+              # arguments.
+              source $BASE/new/devstack-plugin-ceph/manila/post_test_hook.sh \
+                  singlebackend cephfsnative api
+          }
+          export -f post_test_hook
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - devstack-logs
+      - console-log

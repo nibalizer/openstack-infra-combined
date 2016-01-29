@@ -1,0 +1,15 @@
+- job-template:
+    name: 'gate-{name}-rake'
+    node: '{node}'
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - revoke-sudo
+      - gerrit-git-prep
+      - bundle-install
+      - exec-rake
+
+    publishers:
+      - console-log
+      - coverage-log-ruby

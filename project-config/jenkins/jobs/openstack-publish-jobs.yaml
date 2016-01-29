@@ -1,0 +1,117 @@
+- job-template:
+    name: '{name}-docs'
+    node: bare-trusty
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - revoke-sudo
+      - gerrit-git-prep
+      - docs
+
+    publishers:
+      - ftp:
+          site: '{doc-publisher-site}'
+          source: 'doc/build/html/**'
+          target: 'developer/{name}'
+          remove-prefix: 'doc/build/html'
+          excludes: ''
+      - console-log
+
+
+- job-template:
+    name: '{name}-docs-constraints'
+    node: bare-trusty
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - revoke-sudo
+      - zuul-git-prep-upper-constraints
+      - docs-env:
+          env: venv-constraints
+
+    publishers:
+      - ftp:
+          site: '{doc-publisher-site}'
+          source: 'doc/build/html/**'
+          target: 'developer/{name}'
+          remove-prefix: 'doc/build/html'
+          excludes: ''
+      - console-log
+
+
+- job-template:
+    name: '{name}-merge-release-tags'
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - revoke-sudo
+      - gerrit-git-prep
+      - shell: |
+          #!/bin/bash -xe
+          TAG=`echo $ZUUL_REFNAME | sed 's/refs.tags.//'`
+          /usr/local/jenkins/slave_scripts/merge_tags.sh $TAG
+
+    publishers:
+      - console-log
+
+    node: 'proposal'
+
+
+# Publish releasenotes to docs.openstack.org/releasenotes/. This is
+# always published from master branch.
+- job-template:
+    name: '{name}-releasenotes'
+    node: bare-trusty
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - revoke-sudo
+      - branch-git-prep:
+          branch: master
+      - tox:
+          envlist: 'releasenotes'
+
+    publishers:
+      - ftp:
+          site: '{doc-publisher-site}'
+          source: 'releasenotes/build/html/**'
+          target: 'releasenotes/{name}'
+          remove-prefix: 'releasenotes/build/html'
+          excludes: ''
+      - console-log
+
+
+- job-template:
+    name: 'gate-{name}-releasenotes'
+    node: bare-trusty
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - revoke-sudo
+      - gerrit-git-prep
+      - tox:
+          envlist: 'releasenotes'
+
+    publishers:
+      - upload-releasenotes-draft
+      - zuul-swift-upload-console-log
+
+
+- job-group:
+    name: openstack-publish-jobs
+    jobs:
+      - '{name}-docs'
+      - '{name}-docs-constraints'
+      - '{name}-merge-release-tags'
+
+
+- job-group:
+    name: openstack-releasenotes-jobs
+    jobs:
+      - 'gate-{name}-releasenotes'
+      - '{name}-releasenotes'

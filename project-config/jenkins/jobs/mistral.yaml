@@ -1,0 +1,73 @@
+- job-template:
+    name: '{pipeline}-{component}-devstack-dsvm'
+    node: '{node}'
+
+    wrappers:
+      - build-timeout:
+          timeout: 65
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=60
+          export DEVSTACK_GATE_NEUTRON=1
+
+          if [ "{component}" = "python-mistralclient" ] ; then
+              export DEVSTACK_PROJECT_FROM_GIT="python-mistralclient"
+          fi
+
+          export ENABLED_SERVICES=h-api,h-api-cfn,h-api-cw,h-eng,heat,tempest
+          export PROJECTS="openstack/mistral $PROJECTS"
+          export PROJECTS="openstack/mistral-dashboard $PROJECTS"
+          export PROJECTS="openstack/python-mistralclient $PROJECTS"
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin mistral https://git.openstack.org/openstack/mistral"
+
+          function post_test_hook {{
+              cd /opt/stack/new/{component}/functionaltests
+              ./post_test_hook.sh
+          }}
+          export -f post_test_hook
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - devstack-logs
+      - console-log
+
+- job:
+    name: 'gate-mistral-docker-buildimage'
+    node: bare-trusty
+
+    builders:
+      - link-logs
+      - net-info
+      - gerrit-git-prep
+      - shell: |
+          #!/bin/bash -xe
+          if [ -x "/usr/bin/apt-get" ]; then
+             sudo -E apt-get update
+             sudo -E apt-get install -y docker.io
+          elif [ -x "/usr/bin/yum" ]; then
+             sudo -E yum install -y docker-io gpg
+          else
+             echo "No supported package manager installed on system. Supported: apt, yum"
+             exit 1
+          fi
+          sudo docker build -t mistral-docker .
+          sudo docker save mistral-docker | gzip >  mistral-docker.tar.gz
+
+    publishers:
+      - scp:
+          site: 'tarballs.openstack.org'
+          files:
+            - source: 'mistral-docker.tar.gz'
+              target: 'tarballs/mistral/images'
+              keep-hierarchy: false
+              copy-after-failure: false
+      - console-log

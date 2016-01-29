@@ -1,0 +1,68 @@
+- job:
+    name: node-test
+
+    parameters:
+      - label:
+          name: NODE
+          description: Node to test
+
+    builders:
+      - shell: 'echo ok'
+
+- job-template:
+    name: 'gate-{name}-run-tests'
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - revoke-sudo
+      - gerrit-git-prep
+      - run-tests
+
+    publishers:
+      - console-log
+
+    node: '{node}'
+
+- job-template:
+    name: 'gate-{name}-linters'
+    description: General target to run all lint like jobs
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - revoke-sudo
+      - gerrit-git-prep
+      - linters
+
+    publishers:
+      - console-log
+
+    node: '{node}'
+
+- job-template:
+    name: 'gate-{name}-bashate'
+
+    builders:
+      - print-template-name:
+          template-name: "{template-name}"
+      - revoke-sudo
+      - gerrit-git-prep
+      - bashate
+
+    publishers:
+      - console-log
+
+    node: '{node}'
+
+- job:
+    name: 'sandbox-tag'
+
+    builders:
+      - revoke-sudo
+      - gerrit-git-prep
+
+    publishers:
+      - console-log
+
+    node: bare-trusty

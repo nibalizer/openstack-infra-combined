@@ -1,0 +1,343 @@
+- job:
+    name: gate-sahara-dashboard-dsvm-integration
+    node: devstack-trusty
+
+    wrappers:
+      - build-timeout:
+          timeout: 95
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - firefox-install
+      - xvfb-install
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=90
+          export DEVSTACK_GATE_TEMPEST=0
+          export DEVSTACK_GATE_EXERCISES=0
+          export DEVSTACK_GATE_INSTALL_TESTONLY=1
+          export DEVSTACK_GATE_NEUTRON=1
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin sahara git://git.openstack.org/openstack/sahara"
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin sahara-dashboard git://git.openstack.org/openstack/sahara-dashboard"
+
+          function pre_test_hook {
+              cd /opt/stack/new/sahara-dashboard/tools/gate/integration
+              ./pre_test_hook.sh
+          }
+          export -f pre_test_hook
+
+          function post_test_hook {
+              cd /opt/stack/new/sahara-dashboard/tools/gate/integration
+              ./post_test_hook.sh
+          }
+          export -f post_test_hook
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+    publishers:
+      - test-results
+      - devstack-logs
+      - console-log
+      - publish-sahara-screenshots
+
+- publisher:
+    name: publish-sahara-screenshots
+    publishers:
+      - scp:
+          site: 'static.openstack.org'
+          files:
+            - target: 'logs/$LOG_PATH/screenshots'
+              source: 'integration_tests_screenshots/**'
+              copy-after-failure: true
+
+- job-template:
+    name: 'gate-sahara-buildimages-{plugin}'
+    node: bare-trusty
+
+    wrappers:
+      - build-timeout:
+          timeout: 120
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - gerrit-git-prep
+      - shell: |
+          #!/bin/bash -xe
+          sudo mkdir -p /opt/sahara-image-build
+          sudo chown $(whoami) /opt/sahara-image-build
+          export DEST=/opt/sahara-image-build
+          ./tools/gate/build-images {plugin}
+
+    publishers:
+      - console-log
+
+
+- builder:
+    name: sahara-extra-build
+    builders:
+      - link-logs
+      - shell: |
+          #!/bin/bash -xe
+          tools/build-all-artifacts.sh
+
+
+- publisher:
+    name: sahara-extra-publish
+    publishers:
+      - scp:
+          site: 'tarballs.openstack.org'
+          files:
+            - source: 'dist/**'
+              target: 'tarballs/sahara/'
+              keep-hierarchy: true
+              copy-after-failure: false
+
+
+- job:
+    name: 'check-sahara-extra-artifacts'
+    node: bare-trusty
+
+    wrappers:
+      - build-timeout:
+          timeout: 65
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - gerrit-git-prep
+      - sahara-extra-build
+
+    publishers:
+      - console-log
+
+
+- job:
+    name: 'gate-sahara-extra-artifacts'
+    node: bare-trusty
+
+    wrappers:
+      - build-timeout:
+          timeout: 65
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - gerrit-git-prep
+      - sahara-extra-build
+
+    publishers:
+      - console-log
+      - sahara-extra-publish
+
+
+- job-template:
+    name: '{pipeline}-saharaclient-dsvm-functional{job-suffix}'
+    node: '{node}'
+
+    wrappers:
+      - build-timeout:
+          timeout: 65
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=60
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin sahara git://git.openstack.org/openstack/sahara"
+          export BRANCH_OVERRIDE={branch-override}
+          export PROJECTS="openstack/python-saharaclient $PROJECTS"
+          export DEVSTACK_PROJECT_FROM_GIT=python-saharaclient
+          if [ "$BRANCH_OVERRIDE" != "default" ] ; then
+              export OVERRIDE_ZUUL_BRANCH=$BRANCH_OVERRIDE
+          fi
+
+          function post_test_hook {{
+              # Configure and run functional tests
+              $BASE/new/python-saharaclient/saharaclient/tests/functional/hooks/post_test_hook.sh
+          }}
+          export -f post_test_hook
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - test-results
+      - devstack-logs
+
+
+- job-template:
+    name: '{pipeline}-tempest-dsvm-sahara{job-suffix}'
+    node: '{node}'
+
+    wrappers:
+      - build-timeout:
+          timeout: 125
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=120
+          export DEVSTACK_GATE_TEMPEST=1
+          export DEVSTACK_GATE_TEMPEST_REGEX="data_processing"
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin sahara git://git.openstack.org/openstack/sahara"
+          export BRANCH_OVERRIDE={branch-override}
+          if [ "$BRANCH_OVERRIDE" != "default" ] ; then
+              export OVERRIDE_ZUUL_BRANCH=$BRANCH_OVERRIDE
+          fi
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - devstack-logs
+      - console-log
+
+
+- job-template:
+    name: '{pipeline}-grenade-dsvm-sahara{job-suffix}'
+    node: '{node}'
+
+    wrappers:
+      - build-timeout:
+          timeout: 130
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PROJECTS="openstack-dev/grenade $PROJECTS"
+          export PROJECTS="openstack/python-saharaclient $PROJECTS"
+          export PYTHONUNBUFFERED=true
+          OVERRIDE_ENABLED_SERVICES=c-api,c-bak,c-sch,c-vol,cinder,dstat,g-api,g-reg,h-api,h-api-cfn,h-api-cw,h-eng,heat,key,mysql,n-api,n-cond,n-cpu,n-crt,n-sch,q-agt,q-dhcp,q-l3,q-meta,q-metering,q-svc,q-vpn,rabbit,s-account,s-container,s-object,s-proxy,q-lbaas,ceilometer-acompute,ceilometer-acentral,ceilometer-collector,ceilometer-api,sahara
+          # n-obj has been removed from mitaka
+          if [[ "stable/kilo stable/liberty" =~ $ZUUL_BRANCH ]]; then
+              OVERRIDE_ENABLED_SERVICES+=,n-obj,
+          fi
+          export OVERRIDE_ENABLED_SERVICES
+          export DEVSTACK_GATE_TIMEOUT=120
+          export DEVSTACK_GATE_NEUTRON=1
+          export DEVSTACK_GATE_TEMPEST=0
+          export DEVSTACK_GATE_GRENADE=pullup
+          export BRANCH_OVERRIDE={branch-override}
+          if [ "$BRANCH_OVERRIDE" != "default" ] ; then
+              export OVERRIDE_ZUUL_BRANCH=$BRANCH_OVERRIDE
+          fi
+          export GRENADE_PLUGINRC="enable_grenade_plugin sahara https://git.openstack.org/openstack/sahara"
+          export GRENADE_PLUGINRC+=$'\n'"enable_grenade_plugin heat https://git.openstack.org/openstack/heat"
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - devstack-logs
+      - console-log
+
+
+- job-template:
+    name: '{pipeline}-{name}-dsvm-scenario-{network}-{engine}{job-suffix}'
+    node: '{node}'
+
+    wrappers:
+      - build-timeout:
+          timeout: 125
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=120
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin sahara git://git.openstack.org/openstack/sahara"
+          export DEVSTACK_GATE_TEMPEST=0
+          export DEVSTACK_GATE_EXERCISES=0
+          export DEVSTACK_GATE_INSTALL_TESTONLY=1
+          export KEEP_LOCALRC=1
+          export PROJECTS="openstack/sahara-scenario $PROJECTS"
+
+          export BRANCH_OVERRIDE={branch-override}
+          if [ "$BRANCH_OVERRIDE" != "default" ] ; then
+              export OVERRIDE_ZUUL_BRANCH=$BRANCH_OVERRIDE
+          fi
+
+          if [ "{network}" == "neutron" ] ; then
+              export DEVSTACK_GATE_NEUTRON=1
+          fi
+
+          if [ "{engine}" == "heat" ] ; then
+              export DEVSTACK_GATE_HEAT=1
+          fi
+
+          function pre_test_hook {{
+              cd /opt/stack/new/sahara-scenario/tools/gate/scenario
+              ./pre_test_hook.sh {network} {engine}
+          }}
+          export -f pre_test_hook
+
+          function post_test_hook {{
+              cd /opt/stack/new/sahara-scenario/tools/gate/scenario
+              ./post_test_hook.sh {network} {engine}
+          }}
+          export -f post_test_hook
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - devstack-logs
+      - console-log
+
+
+- job-template:
+    name: '{pipeline}-tempest-dsvm-neutron-src-python-saharaclient{job-suffix}'
+    node: '{node}'
+
+    wrappers:
+      - build-timeout:
+          timeout: 125
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=120
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin sahara git://git.openstack.org/openstack/sahara"
+          export DEVSTACK_GATE_TEMPEST=1
+          export DEVSTACK_GATE_TEMPEST_FULL=1
+          export DEVSTACK_GATE_NEUTRON=1
+          export BRANCH_OVERRIDE={branch-override}
+          if [ "$BRANCH_OVERRIDE" != "default" ] ; then
+              export OVERRIDE_ZUUL_BRANCH=$BRANCH_OVERRIDE
+          fi
+          export PROJECTS="openstack/python-saharaclient $PROJECTS"
+          export DEVSTACK_PROJECT_FROM_GIT=python-saharaclient
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - devstack-logs
+      - console-log

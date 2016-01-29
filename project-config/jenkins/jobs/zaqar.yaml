@@ -1,0 +1,92 @@
+- job-template:
+    name: '{pipeline}-zaqarclient-dsvm-functional{job-suffix}'
+    node: '{node}'
+
+    wrappers:
+      - build-timeout:
+          timeout: 95
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PROJECTS="openstack/python-zaqarclient $PROJECTS"
+          export PYTHONUNBUFFERED=true
+          export FUNCTEST_TIMEOUT=30
+          export DEVSTACK_GATE_ZAQAR=1
+          export DEVSTACK_GATE_TEMPEST=0
+          export DEVSTACK_GATE_TIMEOUT=90
+          export DEVSTACK_GATE_EXERCISES=0
+          export DEVSTACK_GATE_INSTALL_TESTONLY=1
+          export ENABLED_SERVICES=mysql,key,tempest
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin zaqar git://git.openstack.org/openstack/zaqar"
+          export BRANCH_OVERRIDE={branch-override}
+
+          if [ "$BRANCH_OVERRIDE" != "default" ] ; then
+              export OVERRIDE_ZUUL_BRANCH=$BRANCH_OVERRIDE
+          fi
+
+          export ZAQARCLIENT_AUTH_FUNCTIONAL=1
+          export ZAQARCLIENT_TEST_FUNCTIONAL=1
+          function post_test_hook {{
+              cd /opt/stack/new/python-zaqarclient
+              nosetests tests.functional
+          }}
+
+          export -f post_test_hook
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - test-results
+      - devstack-logs
+      - console-log
+
+
+- job-template:
+    name: '{pipeline}-dsvm-{backend}-zaqar{job-suffix}'
+    node: '{node}'
+
+    wrappers:
+      - build-timeout:
+          timeout: 125
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PROJECTS="openstack/python-zaqarclient $PROJECTS"
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=120
+          export BRANCH_OVERRIDE={branch-override}
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin zaqar git://git.openstack.org/openstack/zaqar"
+
+          if [ "$BRANCH_OVERRIDE" != "default" ] ; then
+              export OVERRIDE_ZUUL_BRANCH=$BRANCH_OVERRIDE
+          fi
+
+          function gate_hook {{
+              cd /opt/stack/new/zaqar/devstack/gate
+              ./gate_hook.sh {backend}
+          }}
+          export -f gate_hook
+
+          function post_test_hook {{
+              cd /opt/stack/new/zaqar/devstack/gate
+              ./post_test_hook.sh {backend}
+          }}
+          export -f post_test_hook
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - test-results
+      - devstack-logs
+      - console-log

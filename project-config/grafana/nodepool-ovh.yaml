@@ -1,0 +1,186 @@
+dashboard:
+  title: 'Nodepool: OVH'
+  rows:
+    - title: Description
+      height: 100px
+      panels:
+        - title: Description
+          content: |
+            **This dashboard is managed by [Grafyaml](http://docs.openstack.org/infra/system-config/grafyaml.html).**
+
+            If you would like to make changes to this dashboard, please see the grafana directory in [project-config](https://git.openstack.org/cgit/openstack-infra/project-config/tree/grafana/nodepool-ovh.yaml).
+          type: text
+    - title: Nodes
+      showTitle: true
+      height: 150px
+      panels:
+        - title: Building
+          span: 3
+          sparkline:
+            full: true
+            show: true
+          targets:
+            - target: sumSeries(stats.gauges.nodepool.provider.ovh-*.nodes.building)
+          type: singlestat
+          valueName: current
+        - title: Ready
+          span: 3
+          sparkline:
+            full: true
+            show: true
+          targets:
+            - target: sumSeries(stats.gauges.nodepool.provider.ovh-*.nodes.ready)
+          type: singlestat
+          valueName: current
+        - title: In Use
+          span: 3
+          sparkline:
+            full: true
+            show: true
+          targets:
+            - target: sumSeries(stats.gauges.nodepool.provider.ovh-*.nodes.used)
+          type: singlestat
+          valueName: current
+        - title: Deleting
+          span: 3
+          sparkline:
+            full: true
+            show: true
+          targets:
+              - target: sumSeries(stats.gauges.nodepool.provider.ovh-*.nodes.delete)
+          type: singlestat
+          valueName: current
+    - title: API Operations
+      showTitle: true
+      height: 250px
+      panels:
+        - title: Create Server
+          type: graph
+          span: 4
+          leftYAxisLabel: "time"
+          y_formats:
+            - s
+            - none
+          targets:
+            - target: alias(scale(stats.timers.nodepool.task.ovh-bhs1.CreateServerTask.mean, '0.001'), 'BHS1')
+            - target: alias(scale(stats.timers.nodepool.task.ovh-gra1.CreateServerTask.mean, '0.001'), 'GRA1')
+        - title: Delete Server
+          type: graph
+          span: 4
+          leftYAxisLabel: "time"
+          y_formats:
+            - s
+            - none
+          targets:
+            - target: alias(scale(stats.timers.nodepool.task.ovh-bhs1.DeleteServerTask.mean, '0.001'), 'BHS1')
+            - target: alias(scale(stats.timers.nodepool.task.ovh-gra1.DeleteServerTask.mean, '0.001'), 'GRA1')
+        - title: List Servers
+          type: graph
+          span: 4
+          leftYAxisLabel: "time"
+          y_formats:
+            - s
+            - none
+          targets:
+            - target: alias(scale(stats.timers.nodepool.task.ovh-bhs1.ListServersTask.mean, '0.001'), 'BHS1')
+            - target: alias(scale(stats.timers.nodepool.task.ovh-gra1.ListServersTask.mean, '0.001'), 'GRA1')
+    - title: Node Launches
+      showTitle: true
+      height: 250px
+      panels:
+        - title: Ready Node Launch Attempts
+          type: graph
+          span: 4
+          nullPointMode: null as zero
+          leftYAxisLabel: "events / min"
+          targets:
+            - target: alias(smartSummarize(stats_counts.nodepool.launch.provider.ovh-bhs1.ready, '1m'), 'BHS1')
+            - target: alias(smartSummarize(stats_counts.nodepool.launch.provider.ovh-gra1.ready, '1m'), 'GRA1')
+        - title: Error Node Launch Attempts
+          type: graph
+          span: 4
+          nullPointMode: null as zero
+          leftYAxisLabel: "events / min"
+          targets:
+            - target: alias(smartSummarize(sumSeries(stats_counts.nodepool.launch.provider.ovh-bhs1.error.*), '1m'), 'BHS1')
+            - target: alias(smartSummarize(sumSeries(stats_counts.nodepool.launch.provider.ovh-gra1.error.*), '1m'), 'GRA1')
+        - title: Time to Ready
+          type: graph
+          span: 4
+          leftYAxisLabel: "time"
+          y_formats:
+            - s
+            - none
+          targets:
+            - target: alias(scale(stats.timers.nodepool.launch.provider.ovh-bhs1.ready.mean, '0.001'), 'BHS1')
+            - target: alias(scale(stats.timers.nodepool.launch.provider.ovh-gra1.ready.mean, '0.001'), 'GRA1')
+        - title: Test Nodes (BHS1)
+          type: graph
+          span: 4
+          stack: true
+          tooltip:
+            value_type: individual
+          leftYAxisLabel: "nodes"
+          targets:
+            - target: alias(stats.gauges.nodepool.provider.ovh-bhs1.nodes.building, 'Building')
+            - target: alias(stats.gauges.nodepool.provider.ovh-bhs1.nodes.ready, 'Available')
+            - target: alias(stats.gauges.nodepool.provider.ovh-bhs1.nodes.used, 'In Use')
+            - target: alias(stats.gauges.nodepool.provider.ovh-bhs1.nodes.delete, 'Deleting')
+            - target: alias(stats.gauges.nodepool.provider.ovh-bhs1.max_servers, 'Max')
+          seriesOverrides:
+            - alias: Max
+              stack: False
+        - title: Test Nodes (GRA1)
+          type: graph
+          span: 4
+          stack: true
+          tooltip:
+            value_type: individual
+          leftYAxisLabel: "nodes"
+          targets:
+            - target: alias(stats.gauges.nodepool.provider.ovh-gra1.nodes.building, 'Building')
+            - target: alias(stats.gauges.nodepool.provider.ovh-gra1.nodes.ready, 'Available')
+            - target: alias(stats.gauges.nodepool.provider.ovh-gra1.nodes.used, 'In Use')
+            - target: alias(stats.gauges.nodepool.provider.ovh-gra1.nodes.delete, 'Deleting')
+            - target: alias(stats.gauges.nodepool.provider.ovh-gra1.max_servers, 'Max')
+          seriesOverrides:
+            - alias: Max
+              stack: False
+    - title: Images
+      showTitle: true
+      height: 250px
+      panels:
+        - title: Image Uploads
+          type: graph
+          span: 4
+          leftYAxisLabel: "time"
+          y_formats:
+            - s
+            - none
+          targets:
+            - target: alias(scale(averageSeries(stats.timers.nodepool.image_update.*.ovh-bhs1.mean), '0.001'), 'BHS1')
+            - target: alias(scale(averageSeries(stats.timers.nodepool.image_update.*.ovh-gra1.mean), '0.001'), 'GRA1')
+    - title: Job Runtimes
+      showTitle: true
+      height: 250px
+      panels:
+        - title: gate-tempest-dsvm-full
+          type: graph
+          span: 6
+          leftYAxisLabel: "time"
+          y_formats:
+            - s
+            - none
+          targets:
+            - target: alias(scale(stats.timers.nodepool.job.gate-tempest-dsvm-full.master.devstack-trusty.ovh-bhs1.runtime.mean, '0.001'), 'BHS1')
+            - target: alias(scale(stats.timers.nodepool.job.gate-tempest-dsvm-full.master.devstack-trusty.ovh-gra1.runtime.mean, '0.001'), 'GRA1')
+        - title: gate-tempest-dsvm-neutron-full
+          type: graph
+          span: 6
+          leftYAxisLabel: "time"
+          y_formats:
+            - s
+            - none
+          targets:
+            - target: alias(scale(stats.timers.nodepool.job.gate-tempest-dsvm-neutron-full.master.devstack-trusty.ovh-bhs1.runtime.mean, '0.001'), 'BHS1')
+            - target: alias(scale(stats.timers.nodepool.job.gate-tempest-dsvm-neutron-full.master.devstack-trusty.ovh-gra1.runtime.mean, '0.001'), 'GRA1')

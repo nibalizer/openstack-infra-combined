@@ -1,0 +1,51 @@
+- job-template:
+    name: '{pipeline}-keystoneclient-dsvm-functional{job-suffix}'
+    node: '{node}'
+
+    wrappers:
+      - build-timeout:
+          timeout: 65
+      - timestamps
+
+    builders:
+      - link-logs
+      - net-info
+      - devstack-checkout
+      - shell: |
+          #!/bin/bash -xe
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=60
+          export BRANCH_OVERRIDE={branch-override}
+          export PROJECTS="openstack/python-keystoneclient $PROJECTS"
+          export DEVSTACK_PROJECT_FROM_GIT=python-keystoneclient
+          if [ "$BRANCH_OVERRIDE" != "default" ] ; then
+              export OVERRIDE_ZUUL_BRANCH=$BRANCH_OVERRIDE
+          fi
+
+          function post_test_hook {{
+              # Configure and run functional tests
+              $BASE/new/python-keystoneclient/keystoneclient/tests/functional/hooks/post_test_hook.sh
+          }}
+          export -f post_test_hook
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+    publishers:
+      - test-results
+      - devstack-logs
+      - console-log
+
+- job:
+    name: keystone-propose-config-updates
+    node: proposal
+
+    builders:
+      - revoke-sudo
+      - link-logs
+      - net-info
+      - gerrit-git-prep
+      - shell: /usr/local/jenkins/slave_scripts/propose_updated_config_file.sh openstack/keystone master
+
+    publishers:
+      - console-log

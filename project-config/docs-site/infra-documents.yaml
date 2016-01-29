@@ -1,0 +1,23 @@
+documents:
+  - name: Bindep
+    directory: bindep
+  - name: Elastic Recheck
+    directory: elastic-recheck
+  - name: Git Review
+    directory: git-review
+  - name: Grafana Dashboard Builder
+    directory: grafyaml
+  - name: Jenkins Job Builder
+    directory: jenkins-job-builder
+  - name: Nodepool
+    directory: nodepool
+  - name: OpenStackID
+    directory: openstackid
+  - name: Shade
+    directory: shade
+  - name: Storyboard
+    directory: storyboard
+  - name: OpenStack CI
+    directory: openstackci
+  - name: Zuul
+    directory: zuul

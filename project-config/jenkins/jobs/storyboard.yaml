@@ -1,0 +1,62 @@
+# This is a non-standard docs job because it uses SCP instead of FTP
+- job:
+    name: storyboard-docs
+    node: bare-trusty
+
+    builders:
+      - revoke-sudo
+      - gerrit-git-prep
+      - docs
+
+    publishers:
+      - scp:
+          site: '173.203.107.207'
+          files:
+            - target: 'ci/storyboard'
+              source: 'doc/build/html/**/*'
+              keep-hierarchy: true
+      - console-log
+
+- job:
+    name: gate-storyboard-js-integration
+    wrappers:
+      - build-timeout:
+          timeout: 40
+      - timestamps
+
+    builders:
+      - npm-install
+      - xvfb-install
+      - chrome-install
+      - gerrit-git-prep
+      - shell: |
+          #!/bin/bash -xe
+          /usr/zuul-env/bin/zuul-cloner --cache-dir /opt/git git://git.openstack.org openstack-infra/storyboard openstack-infra/storyboard-webclient
+
+          export CREATE_USER=1
+          export DB_ADMIN_USER=root
+          export STORYBOARD_PATH=openstack-infra/storyboard
+
+          ./openstack-infra/storyboard/tools/install_test_backend.sh
+
+      - js-build:
+          command: 'test:integration'
+          envlist: 'grunt_no_api'
+          project: 'storyboard-webclient'
+      - assert-no-extra-files
+
+      - shell: |
+          #!/bin/bash -xe
+          ./openstack-infra/storyboard/tools/destroy_test_backend.sh
+
+    publishers:
+      - console-log
+      - coverage-log
+      - scp:
+          site: 'static.openstack.org'
+          files:
+            - target: 'logs/$LOG_PATH'
+              source: 'reports/**'
+              keep-hierarchy: true
+              copy-after-failure: true
+    node: bare-trusty

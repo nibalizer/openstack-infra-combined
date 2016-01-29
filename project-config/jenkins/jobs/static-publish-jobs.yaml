@@ -1,0 +1,23 @@
+# Jobs for static site publication
+
+- job-template:
+    name: static-{name}-publish
+    node: bare-trusty
+
+    builders:
+      - revoke-sudo
+      - gerrit-git-prep
+      - docs:
+          project: '{name}'
+      - static-publish-prep:
+          source: 'doc/build/html'
+
+    publishers:
+      - scp:
+          site: static.openstack.org
+          files:
+            - target: '{docroot}/'
+              source: '**'
+              keep-hierarchy: true
+              copy-after-failure: false
+      - console-log
