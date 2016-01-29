@@ -1,0 +1,19 @@
+<VirtualHost <%= @hostname %>:80>
+<% if !!@server_admin %>
+  ServerAdmin <%= @server_admin %>
+<% end %>
+  ServerName <%= @hostname %>
+
+  DocumentRoot <%= @install_www_root %>
+
+  WSGIDaemonProcess refstack user=<%= @user %> group=<%= @group %> threads=5
+  WSGIScriptAlias /api /etc/refstack/app.wsgi
+  WSGIPassAuthorization On
+  LogLevel warn
+  ErrorLog ${APACHE_LOG_DIR}/refstack-error.log
+  CustomLog ${APACHE_LOG_DIR}/refstack-access.log combined
+
+  <Directory "/etc/refstack">
+    Require all granted
+  </Directory>
+</VirtualHost>

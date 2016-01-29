@@ -1,0 +1,15 @@
+[DEFAULT]
+
+ui_url=<%= scope.lookupvar("::refstack::params::web_url") %>
+
+[api]
+
+api_url =<%= scope.lookupvar("::refstack::params::api_url") %>
+
+[database]
+
+connection=<%= scope.lookupvar("::refstack::params::mysql_connection_string") %>
+
+[osid]
+
+openid_return_to=/api/v1/auth/signin_return
