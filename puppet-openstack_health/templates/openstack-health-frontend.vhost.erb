@@ -1,0 +1,22 @@
+<% unless [443, 80].include?(@vhost_port.to_i) %>
+Listen <%= @vhost_port %>
+<% end %>
+<VirtualHost *:<%= @vhost_port %>>
+  ServerName <%= @vhost_name %>
+  ServerAdmin <%= @serveradmin %>
+
+  LogLevel info
+  CustomLog ${APACHE_LOG_DIR}/openstack-health-frontend-access.log combined
+  ErrorLog ${APACHE_LOG_DIR}/openstack-health-frontend-error.log
+
+  <Directory <%= @frontend_dir %>>
+    Order allow,deny
+    Allow from all
+    <IfVersion >= 2.4>
+     Require all granted
+    </IfVersion>
+  </Directory>
+
+  DocumentRoot <%= @frontend_dir %>
+  DirectoryIndex index.html
+</VirtualHost>
